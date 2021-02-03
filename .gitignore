@@ -1,0 +1,18 @@
+embeddeds/haskell/dist
+
+# Python
+*.py[cod]
+
+.idea/
+
+
+
+*.iml
+
+# Eclipse
+.metadata
+.recommenders
+CinEditorML/.settings
+CinEditorML/.classpath
+CinEditorML/.project
+target
