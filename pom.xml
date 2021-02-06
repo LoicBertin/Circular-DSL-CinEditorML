@@ -6,10 +6,10 @@
     <artifactId>root</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>CineEditorML :: Root Project</name>
+    <name>CinEditorML :: Root Project</name>
 
     <modules>
-        <module>kernels/jvm</module>
-        <module>embeddeds/groovy/CineEditorML</module>
+        <module>jvm</module>
+        <module>CinEditorML</module>
     </modules>
 </project>

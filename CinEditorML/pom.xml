@@ -58,7 +58,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>main.groovy.cineditorml.main.CineEditorML</mainClass>
+							<mainClass>main.groovy.cineditorml.main.CinEditorML</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

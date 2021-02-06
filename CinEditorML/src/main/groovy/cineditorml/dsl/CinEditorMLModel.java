@@ -12,14 +12,14 @@ import fr.circular.cineditorml.kernel.behavioral.Transition;
 import fr.circular.cineditorml.kernel.generator.ToWiring;
 import fr.circular.cineditorml.kernel.generator.Visitor;
 
-public class CineEditorMLModel {
+public class CinEditorMLModel {
 	private List<Brick> bricks;
 	private List<State> states;
 	private State initialState;
 	
 	private Binding binding;
 	
-	public CineEditorMLModel(Binding binding) {
+	public CinEditorMLModel(Binding binding) {
 		this.bricks = new ArrayList<Brick>();
 		this.states = new ArrayList<State>();
 		this.binding = binding;

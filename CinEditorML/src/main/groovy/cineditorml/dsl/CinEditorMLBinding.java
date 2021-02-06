@@ -5,22 +5,22 @@ import java.util.Map;
 import groovy.lang.Binding;
 import groovy.lang.Script;
 
-public class CineEditorMLBinding extends Binding {
+public class CinEditorMLBinding extends Binding {
 	// can be useful to return the script in case of syntax trick
 	private Script script;
 	
-	private CineEditorMLModel model;
+	private CinEditorMLModel model;
 	
-	public CineEditorMLBinding() {
+	public CinEditorMLBinding() {
 		super();
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public CineEditorMLBinding(Map variables) {
+	public CinEditorMLBinding(Map variables) {
 		super(variables);
 	}
 	
-	public CineEditorMLBinding(Script script) {
+	public CinEditorMLBinding(Script script) {
 		super();
 		this.script = script;
 	}
@@ -29,7 +29,7 @@ public class CineEditorMLBinding extends Binding {
 		this.script = script;
 	}
 	
-	public void setCineEditorMLModel(CineEditorMLModel model) {
+	public void setCinEditorMLModel(CinEditorMLModel model) {
 		this.model = model;
 	}
 	
@@ -47,7 +47,7 @@ public class CineEditorMLBinding extends Binding {
 		super.setVariable(name, value);
 	}
 	
-	public CineEditorMLModel getCineEditorMLModel() {
+	public CinEditorMLModel getCinEditorMLModel() {
 		return this.model;
 	}
 }

@@ -10,9 +10,9 @@ import java.io.File;
  * 
  * @author Thomas Moreau
  */
-public class CineEditorML {
+public class CinEditorML {
 	public static void main(String[] args) {
-		main.groovy.cineditorml.dsl.CineEditorMLDSL dsl = new main.groovy.cineditorml.dsl.CineEditorMLDSL();
+		main.groovy.cineditorml.dsl.CinEditorMLDSL dsl = new main.groovy.cineditorml.dsl.CinEditorMLDSL();
 		if(args.length > 0) {
 			dsl.eval(new File(args[0]));
 		} else {

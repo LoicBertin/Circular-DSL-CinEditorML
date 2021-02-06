@@ -6,17 +6,17 @@ import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.SecureASTCustomizer
 import fr.circular.cineditorml.kernel.structural.SIGNAL
 
-class CineEditorMLDSL {
+class CinEditorMLDSL {
 	private GroovyShell shell
 	private CompilerConfiguration configuration
-	private CineEditorMLBinding binding
-	private CineEditorMLBasescript basescript
+	private CinEditorMLBinding binding
+	private CinEditorMLBasescript basescript
 
-	CineEditorMLDSL() {
-		binding = new CineEditorMLBinding()
-		binding.setCineEditorMLModel(new CineEditorMLModel(binding));
+	CinEditorMLDSL() {
+		binding = new CinEditorMLBinding()
+		binding.setCinEditorMLModel(new CinEditorMLModel(binding));
 		configuration = getDSLConfiguration()
-		configuration.setScriptBaseClass("main.groovy.cineditorml.dsl.CineEditorMLBasescript")
+		configuration.setScriptBaseClass("main.groovy.cineditorml.dsl.CinEditorMLBasescript")
 		shell = new GroovyShell(configuration)
 		
 		binding.setVariable("high", SIGNAL.HIGH)
