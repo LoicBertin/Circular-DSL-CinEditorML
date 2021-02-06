@@ -1,8 +1,6 @@
-package main.groovy.groovuinoml.main;
+package main.groovy.cineditorml.main;
 
 import java.io.File;
-
-import main.groovy.groovuinoml.dsl.GroovuinoMLDSL;
 
 /**
  * This main takes one argument: the path to the Groovy script file to execute.
@@ -12,9 +10,9 @@ import main.groovy.groovuinoml.dsl.GroovuinoMLDSL;
  * 
  * @author Thomas Moreau
  */
-public class GroovuinoML {
+public class CineEditorML {
 	public static void main(String[] args) {
-		GroovuinoMLDSL dsl = new GroovuinoMLDSL();
+		main.groovy.cineditorml.dsl.CineEditorMLDSL dsl = new main.groovy.cineditorml.dsl.CineEditorMLDSL();
 		if(args.length > 0) {
 			dsl.eval(new File(args[0]));
 		} else {

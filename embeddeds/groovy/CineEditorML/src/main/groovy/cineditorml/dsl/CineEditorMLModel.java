@@ -1,4 +1,4 @@
-package main.groovy.groovuinoml.dsl;
+package main.groovy.cineditorml.dsl;
 
 import java.util.*;
 
@@ -12,14 +12,14 @@ import fr.circular.cineditorml.kernel.behavioral.Transition;
 import fr.circular.cineditorml.kernel.generator.ToWiring;
 import fr.circular.cineditorml.kernel.generator.Visitor;
 
-public class GroovuinoMLModel {
+public class CineEditorMLModel {
 	private List<Brick> bricks;
 	private List<State> states;
 	private State initialState;
 	
 	private Binding binding;
 	
-	public GroovuinoMLModel(Binding binding) {
+	public CineEditorMLModel(Binding binding) {
 		this.bricks = new ArrayList<Brick>();
 		this.states = new ArrayList<State>();
 		this.binding = binding;

@@ -1,26 +1,26 @@
-package main.groovy.groovuinoml.dsl;
+package main.groovy.cineditorml.dsl;
 
 import java.util.Map;
 
 import groovy.lang.Binding;
 import groovy.lang.Script;
 
-public class GroovuinoMLBinding extends Binding {
+public class CineEditorMLBinding extends Binding {
 	// can be useful to return the script in case of syntax trick
 	private Script script;
 	
-	private GroovuinoMLModel model;
+	private CineEditorMLModel model;
 	
-	public GroovuinoMLBinding() {
+	public CineEditorMLBinding() {
 		super();
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public GroovuinoMLBinding(Map variables) {
+	public CineEditorMLBinding(Map variables) {
 		super(variables);
 	}
 	
-	public GroovuinoMLBinding(Script script) {
+	public CineEditorMLBinding(Script script) {
 		super();
 		this.script = script;
 	}
@@ -29,7 +29,7 @@ public class GroovuinoMLBinding extends Binding {
 		this.script = script;
 	}
 	
-	public void setGroovuinoMLModel(GroovuinoMLModel model) {
+	public void setCineEditorMLModel(CineEditorMLModel model) {
 		this.model = model;
 	}
 	
@@ -47,7 +47,7 @@ public class GroovuinoMLBinding extends Binding {
 		super.setVariable(name, value);
 	}
 	
-	public GroovuinoMLModel getGroovuinoMLModel() {
+	public CineEditorMLModel getCineEditorMLModel() {
 		return this.model;
 	}
 }

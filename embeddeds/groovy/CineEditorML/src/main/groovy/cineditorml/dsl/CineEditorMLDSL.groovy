@@ -1,4 +1,4 @@
-package main.groovy.groovuinoml.dsl
+package main.groovy.cineditorml.dsl
 
 import fr.circular.cineditorml.kernel.behavioral.NOTE
 import fr.circular.cineditorml.kernel.behavioral.DURATION
@@ -6,17 +6,17 @@ import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.SecureASTCustomizer
 import fr.circular.cineditorml.kernel.structural.SIGNAL
 
-class GroovuinoMLDSL {
+class CineEditorMLDSL {
 	private GroovyShell shell
 	private CompilerConfiguration configuration
-	private GroovuinoMLBinding binding
-	private GroovuinoMLBasescript basescript
-	
-	GroovuinoMLDSL() {
-		binding = new GroovuinoMLBinding()
-		binding.setGroovuinoMLModel(new GroovuinoMLModel(binding));
+	private CineEditorMLBinding binding
+	private CineEditorMLBasescript basescript
+
+	CineEditorMLDSL() {
+		binding = new CineEditorMLBinding()
+		binding.setCineEditorMLModel(new CineEditorMLModel(binding));
 		configuration = getDSLConfiguration()
-		configuration.setScriptBaseClass("main.groovy.groovuinoml.dsl.GroovuinoMLBasescript")
+		configuration.setScriptBaseClass("main.groovy.cineditorml.dsl.CineEditorMLBasescript")
 		shell = new GroovyShell(configuration)
 		
 		binding.setVariable("high", SIGNAL.HIGH)
