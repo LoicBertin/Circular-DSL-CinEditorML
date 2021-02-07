@@ -14,15 +14,22 @@ public class Switch {
 		TextClip clip1 = new TextClip();
 		clip1.setName("clip1");
 		clip1.setText("Les vacances de Noël");
-		clip1.setBackgroundColor("(0,0,0)");
 
-		TextPositionInstruction positionInstruction = new TextPositionInstruction(POSITION.center);
-		clip1.addInstruction(positionInstruction);
+		TextPositionInstruction centeredPositionInstruction = new TextPositionInstruction(POSITION.center);
+		clip1.addInstruction(centeredPositionInstruction);
 
-		DurationInstruction instruction1 = new DurationInstruction("10");
-		clip1.addInstruction(instruction1);
+		DurationInstruction duration10Instruction = new DurationInstruction("10");
+		clip1.addInstruction(duration10Instruction);
 
+		ColorClip clip1_color = new ColorClip();
+		clip1_color.setName("clip1_color");
+		clip1_color.setColor("(0,0,0)");
+		clip1_color.addInstruction(duration10Instruction);
 
+		MergeClip clip1_merged = new MergeClip();
+		clip1_merged.setName("clip1_merged");
+		clip1_merged.addClip(clip1_color);
+		clip1_merged.addClip(clip1);
 
 		VideoClip clip2 = new VideoClip();
 		clip2.setName("clip2");
@@ -35,15 +42,25 @@ public class Switch {
 		TextClip clip4 = new TextClip();
 		clip4.setName("clip4");
 		clip4.setText("Les vacances de Noël");
-		clip4.setBackgroundColor("(0,0,0)");
+		clip4.addInstruction(centeredPositionInstruction);
 
-		DurationInstruction instruction2 = new DurationInstruction("15");
-		clip4.addInstruction(instruction2);
+		ColorClip clip4_color = new ColorClip();
+		clip4_color.setName("clip4_color");
+		clip4_color.setColor("(0,0,0)");
+
+		DurationInstruction duration15Instruction = new DurationInstruction("15");
+		clip4.addInstruction(duration15Instruction);
+		clip4_color.addInstruction(duration15Instruction);
+
+		MergeClip clip4_merged = new MergeClip();
+		clip4_merged.setName("clip4_merged");
+		clip4_merged.addClip(clip4_color);
+		clip4_merged.addClip(clip4);
 
 		// Building the App
 		App theSwitch = new App();
 		theSwitch.setName("Switch");
-		theSwitch.setClips(Arrays.asList(clip1,clip2,clip3,clip4));
+		theSwitch.setClips(Arrays.asList(clip1_merged,clip2,clip3,clip4_merged));
 
 		// Generating Code
 		Visitor codeGenerator = new ToWiring();

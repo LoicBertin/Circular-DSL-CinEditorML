@@ -69,8 +69,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 		for(Instruction instruction : textClip.getInstructions()){
 			instruction.accept(this);
 		}
-		w(String.format("\n%s_color= ColorClip(size=(1920,1080), color=%s).set_duration(10)\n", textClip.getName(),textClip.getBackgroundColor()));
-		w(String.format("%s = CompositeVideoClip([%s_color, %s])\n", textClip.getName(),textClip.getName() ,textClip.getName()));
+		w("\n");
 	}
 
 	@Override
@@ -80,6 +79,28 @@ public class ToWiring extends Visitor<StringBuffer> {
 			this.visit(instruction);
 		}
 	}
+
+	@Override
+	public void visit(ColorClip colorClip) {
+		w(String.format("%s= ColorClip(size=(1920,1080), color=%s)", colorClip.getName(),colorClip.getColor()));
+		for(Instruction instruction : colorClip.getInstructions()){
+			instruction.accept(this);
+		}
+		w("\n");
+	}
+
+	@Override
+	public void visit(MergeClip mergeClip) {
+		for(Clip clip : mergeClip.getClips()) {
+			clip.accept(this);
+		}
+			w(String.format("%s = CompositeVideoClip([", mergeClip.getName()));
+		for(Clip clip : mergeClip.getClips()){
+			w(clip.getName());
+			if(mergeClip.getClips().indexOf(clip) != mergeClip.getClips().size()-1){
+				w(",");
+			}
+		}
+		w("])\n");
+	}
 }
-
-

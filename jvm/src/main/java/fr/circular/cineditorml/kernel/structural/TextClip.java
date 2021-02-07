@@ -7,7 +7,6 @@ public class TextClip extends Clip{
     private String text;
     private String fontsize;
     private String color;
-    private String backgroundColor;
 
     public TextClip(){
         this.fontsize = "70";
@@ -42,14 +41,6 @@ public class TextClip extends Clip{
 
     public void setColor(String color) {
         this.color = color;
-    }
-
-    public String getBackgroundColor() {
-        return backgroundColor;
-    }
-
-    public void setBackgroundColor(String backgroundColor) {
-        this.backgroundColor = backgroundColor;
     }
 
     @Override
