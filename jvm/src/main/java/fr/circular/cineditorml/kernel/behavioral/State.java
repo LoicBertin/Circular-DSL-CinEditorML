@@ -7,7 +7,7 @@ import fr.circular.cineditorml.kernel.generator.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class State implements NamedElement, Visitable {
+public class State implements NamedElement {
 
 	private String name;
 	private List<Action> actions = new ArrayList<Action>();
@@ -39,8 +39,4 @@ public class State implements NamedElement, Visitable {
 		this.transition = transition;
 	}
 
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visit(this);
-	}
 }

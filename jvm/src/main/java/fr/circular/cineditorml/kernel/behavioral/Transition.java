@@ -8,7 +8,7 @@ import fr.circular.cineditorml.kernel.structural.Sensor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Transition implements Visitable {
+public class Transition {
 
 	private State next;
 	private List<Sensor> sensors = new ArrayList<>();
@@ -47,11 +47,6 @@ public class Transition implements Visitable {
 
 	public void setLogical(LOGICAL logical) {
 		this.logical = logical;
-	}
-
-	@Override
-	public void accept(Visitor visitor) {
-		visitor.visit(this);
 	}
 
 }

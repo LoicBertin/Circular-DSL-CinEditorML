@@ -3,7 +3,7 @@ package fr.circular.cineditorml.kernel.behavioral;
 import fr.circular.cineditorml.kernel.structural.Actuator;
 import fr.circular.cineditorml.kernel.generator.Visitable;
 
-public abstract class Action implements Visitable {
+public abstract class Action {
 
 	private Actuator actuator;
 

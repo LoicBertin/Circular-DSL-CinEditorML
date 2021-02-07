@@ -11,67 +11,18 @@ import java.util.Arrays;
 public class Switch {
 
 	public static void main(String[] args) {
-
-		/*
-		// Declaring elementary bricks
-		Sensor button = new Sensor();
-		button.setName("button");
-		button.setPin(9);
-
-		Sensor button2 = new Sensor();
-		button2.setName("button2");
-		button2.setPin(10);
-
-		Actuator buzzer = new Buzzer();
-		buzzer.setName("buzzer");
-		buzzer.setPin(13);
-
-		// Declaring states
-		State on = new State();
-		on.setName("on");
-
-		State off = new State();
-		off.setName("off");
-
-		// Creating actions
-		ToneAction turnOnBuzzer = new ToneAction();
-		turnOnBuzzer.setActuator(buzzer);
-		turnOnBuzzer.setNote(NOTE.A3);
-
-		ToneAction turnOffBuzzer = new ToneAction();
-		turnOffBuzzer.setActuator(buzzer);
-		turnOffBuzzer.setNote(NOTE.STOP);
-
-		// Binding actions to states
-		on.setActions(Arrays.asList(turnOnBuzzer));
-		off.setActions(Arrays.asList(turnOffBuzzer));
-
-		// Creating transitions
-		Transition on2off = new Transition();
-		on2off.setNext(off);
-		on2off.setSensor(Arrays.asList(button, button2));
-		on2off.setValue(SIGNAL.HIGH);
-		on2off.setLogical(LOGICAL.AND);
-
-		Transition off2on = new Transition();
-		off2on.setNext(on);
-		off2on.setSensor(Arrays.asList(button, button2));
-		off2on.setValue(SIGNAL.HIGH);
-		off2on.setLogical(LOGICAL.AND);
-
-		// Binding transitions to states
-		on.setTransition(on2off);
-		off.setTransition(off2on);
-		 */
-
 		TextClip clip1 = new TextClip();
 		clip1.setName("clip1");
 		clip1.setText("Les vacances de Noël");
 		clip1.setBackgroundColor("(0,0,0)");
 
+		TextPositionInstruction positionInstruction = new TextPositionInstruction(POSITION.center);
+		clip1.addInstruction(positionInstruction);
+
 		DurationInstruction instruction1 = new DurationInstruction("10");
-		instruction1.setClip(clip1);
 		clip1.addInstruction(instruction1);
+
+
 
 		VideoClip clip2 = new VideoClip();
 		clip2.setName("clip2");
@@ -87,15 +38,11 @@ public class Switch {
 		clip4.setBackgroundColor("(0,0,0)");
 
 		DurationInstruction instruction2 = new DurationInstruction("15");
-		instruction2.setClip(clip4);
 		clip4.addInstruction(instruction2);
-
-
-
 
 		// Building the App
 		App theSwitch = new App();
-		theSwitch.setName("Switch!");
+		theSwitch.setName("Switch");
 		theSwitch.setClips(Arrays.asList(clip1,clip2,clip3,clip4));
 
 		// Generating Code

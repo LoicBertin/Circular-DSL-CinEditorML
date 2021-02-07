@@ -2,12 +2,11 @@ package fr.circular.cineditorml.kernel.behavioral;
 
 import fr.circular.cineditorml.kernel.generator.Visitor;
 
-public class ToneAction extends Action {
+public class ToneAction {
     private NOTE note;
     private DURATION duration;
 
     public ToneAction(){
-        this.setNumberOfIteration(1);
     }
 
     public NOTE getNote() {
@@ -24,10 +23,5 @@ public class ToneAction extends Action {
 
     public void setDuration(DURATION duration){
         this.duration = duration;
-    }
-
-    @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
     }
 }

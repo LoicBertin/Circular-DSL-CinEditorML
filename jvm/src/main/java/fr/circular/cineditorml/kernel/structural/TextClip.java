@@ -11,7 +11,7 @@ public class TextClip extends Clip{
 
     public TextClip(){
         this.fontsize = "70";
-        this.color = "black";
+        this.color = "white";
     }
 
     public TextClip(String t, String f, String c){

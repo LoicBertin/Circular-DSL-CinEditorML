@@ -3,7 +3,7 @@ package fr.circular.cineditorml.kernel.structural;
 import fr.circular.cineditorml.kernel.NamedElement;
 import fr.circular.cineditorml.kernel.generator.Visitable;
 
-public abstract class Brick implements NamedElement, Visitable {
+public abstract class Brick implements NamedElement {
 
 	private String name;
 	private int pin;
