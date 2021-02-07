@@ -1,13 +1,8 @@
 package fr.circular.cineditorml.kernel.generator;
 
 import fr.circular.cineditorml.kernel.App;
-import fr.circular.cineditorml.kernel.behavioral.DigitalAction;
-import fr.circular.cineditorml.kernel.behavioral.State;
-import fr.circular.cineditorml.kernel.behavioral.ToneAction;
-import fr.circular.cineditorml.kernel.behavioral.Transition;
-import fr.circular.cineditorml.kernel.structural.Actuator;
-import fr.circular.cineditorml.kernel.structural.Buzzer;
-import fr.circular.cineditorml.kernel.structural.Sensor;
+import fr.circular.cineditorml.kernel.behavioral.*;
+import fr.circular.cineditorml.kernel.structural.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +19,12 @@ public abstract class Visitor<T> {
 	public abstract void visit(Actuator actuator);
 	public abstract void visit(Buzzer buzzer);
 	public abstract void visit(Sensor sensor);
+
+	public abstract void visit(Instruction instruction);
+	public abstract void visit(DurationInstruction durationInstruction);
+	public abstract void visit(Clip clip);
+	public abstract void visit(TextClip textClip);
+	public abstract void visit(VideoClip videoClip);
 
 
 	/***********************

@@ -21,6 +21,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 
 	@Override
 	public void visit(App app) {
+		/*
 		//first pass, create global vars
 		context.put("pass", PASS.ONE);
 		w("// Wiring code generated from an ArduinoML model\n");
@@ -58,6 +59,60 @@ public class ToWiring extends Visitor<StringBuffer> {
 		}
 		w("\t}\n" +
 			"}");
+
+		 */
+		w("Code generated from a CineditorML model \n");
+		w("from moviepy.editor import *\n");
+		w("from moviepy.video import *\n");
+
+		for(Clip clip: app.getClips()){
+			clip.accept(this);
+		}
+
+		w("result = concatenate_videoclips([");
+		for(Clip clip : app.getClips()){
+			w(clip.getName());
+			if(app.getClips().indexOf(clip) != app.getClips().size()-1){
+				w(",");
+			}
+		}
+		w("])\n");
+		w("result.write_videofile(\"../video/result.webm\",fps=25)");
+	}
+
+	@Override
+	public void visit(Instruction instruction) {
+
+	}
+
+	@Override
+	public void visit(DurationInstruction durationInstruction) {
+		//txt_clip.with_duration(10)
+		w(String.format("%s.set_duration(%s)\n",durationInstruction.getClip().getName(), durationInstruction.getDuration()));
+	}
+
+	@Override
+	public void visit(Clip clip) {
+
+	}
+
+	@Override
+	public void visit(TextClip textClip) {
+		//txt_clip = ( TextClip("My Holidays 2013",fontsize=70,color='white')
+		w(String.format("%s = TextClip(\"%S\",fontsize=%s,color=\'%s\')\n", textClip.getName(),textClip.getText() ,textClip.getFontsize(), textClip.getColor()));
+		for(Instruction instruction : textClip.getInstructions()){
+			instruction.accept(this);
+		}
+		w(String.format("%s_color= ColorClip(size=(1920,1080), color=%s)\n", textClip.getName(),textClip.getBackgroundColor()));
+		w(String.format("%s = CompositeVideoClip([%s, %s_color])\n", textClip.getName(),textClip.getName() ,textClip.getName()));
+	}
+
+	@Override
+	public void visit(VideoClip videoClip) {
+		w(String.format("%s = VideoFileClip(\"%s\")\n", videoClip.getName(), videoClip.getFile()));
+		for(Instruction instruction : videoClip.getInstructions()){
+			this.visit(instruction);
+		}
 	}
 
 	@Override
@@ -95,6 +150,8 @@ public class ToWiring extends Visitor<StringBuffer> {
 			return;
 		}
 	}
+
+
 
 	@Override
 	public void visit(State state) {

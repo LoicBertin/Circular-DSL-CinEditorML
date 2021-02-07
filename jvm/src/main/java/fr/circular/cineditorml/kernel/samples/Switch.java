@@ -2,10 +2,7 @@ package fr.circular.cineditorml.kernel.samples;
 
 import fr.circular.cineditorml.kernel.App;
 import fr.circular.cineditorml.kernel.behavioral.*;
-import fr.circular.cineditorml.kernel.structural.Actuator;
-import fr.circular.cineditorml.kernel.structural.Buzzer;
-import fr.circular.cineditorml.kernel.structural.SIGNAL;
-import fr.circular.cineditorml.kernel.structural.Sensor;
+import fr.circular.cineditorml.kernel.structural.*;
 import fr.circular.cineditorml.kernel.generator.ToWiring;
 import fr.circular.cineditorml.kernel.generator.Visitor;
 
@@ -15,6 +12,7 @@ public class Switch {
 
 	public static void main(String[] args) {
 
+		/*
 		// Declaring elementary bricks
 		Sensor button = new Sensor();
 		button.setName("button");
@@ -64,13 +62,41 @@ public class Switch {
 		// Binding transitions to states
 		on.setTransition(on2off);
 		off.setTransition(off2on);
+		 */
+
+		TextClip clip1 = new TextClip();
+		clip1.setName("clip1");
+		clip1.setText("Les vacances de Noël");
+		clip1.setBackgroundColor("(0,0,0)");
+
+		DurationInstruction instruction1 = new DurationInstruction("10");
+		instruction1.setClip(clip1);
+		clip1.addInstruction(instruction1);
+
+		VideoClip clip2 = new VideoClip();
+		clip2.setName("clip2");
+		clip2.setFile("../video/dj_rexma.mp4");
+
+		VideoClip clip3 = new VideoClip();
+		clip3.setName("clip3");
+		clip3.setFile("../video/in_and_in_and_in.mp4");
+
+		TextClip clip4 = new TextClip();
+		clip4.setName("clip4");
+		clip4.setText("Les vacances de Noël");
+		clip4.setBackgroundColor("(0,0,0)");
+
+		DurationInstruction instruction2 = new DurationInstruction("15");
+		instruction2.setClip(clip4);
+		clip4.addInstruction(instruction2);
+
+
+
 
 		// Building the App
 		App theSwitch = new App();
 		theSwitch.setName("Switch!");
-		theSwitch.setBricks(Arrays.asList(button, button2));
-		theSwitch.setStates(Arrays.asList(on, off));
-		theSwitch.setInitial(off);
+		theSwitch.setClips(Arrays.asList(clip1,clip2,clip3,clip4));
 
 		// Generating Code
 		Visitor codeGenerator = new ToWiring();

@@ -2,29 +2,28 @@ package main.groovy.cineditorml.dsl;
 
 import java.util.*;
 
+import fr.circular.cineditorml.kernel.behavioral.*;
 import fr.circular.cineditorml.kernel.structural.*;
 import groovy.lang.Binding;
 import fr.circular.cineditorml.kernel.App;
-import fr.circular.cineditorml.kernel.behavioral.Action;
-import fr.circular.cineditorml.kernel.behavioral.LOGICAL;
-import fr.circular.cineditorml.kernel.behavioral.State;
-import fr.circular.cineditorml.kernel.behavioral.Transition;
 import fr.circular.cineditorml.kernel.generator.ToWiring;
 import fr.circular.cineditorml.kernel.generator.Visitor;
 
 public class CinEditorMLModel {
-	private List<Brick> bricks;
-	private List<State> states;
+	//private List<Brick> bricks;
+	//private List<State> states;
+	private List<Clip> clips;
 	private State initialState;
 	
 	private Binding binding;
 	
 	public CinEditorMLModel(Binding binding) {
-		this.bricks = new ArrayList<Brick>();
-		this.states = new ArrayList<State>();
+		//this.bricks = new ArrayList<Brick>();
+		//this.states = new ArrayList<State>();
+		this.clips = new ArrayList<Clip>();
 		this.binding = binding;
 	}
-	
+	/*
 	public void createSensor(String name, Integer pinNumber) {
 		Sensor sensor = new Sensor();
 		sensor.setName(name);
@@ -66,18 +65,20 @@ public class CinEditorMLModel {
 		transition.setLogical(logical);
 		from.setTransition(transition);
 	}
-	
+	*/
+	/*
 	public void setInitialState(State state) {
 		this.initialState = state;
-	}
+	}*/
 	
 	@SuppressWarnings("rawtypes")
 	public Object generateCode(String appName) {
 		App app = new App();
 		app.setName(appName);
-		app.setBricks(this.bricks);
-		app.setStates(this.states);
-		app.setInitial(this.initialState);
+		//app.setBricks(this.bricks);
+		//app.setStates(this.states);
+		//app.setInitial(this.initialState);
+		app.setClips(this.clips);
 		Visitor codeGenerator = new ToWiring();
 		app.accept(codeGenerator);
 		
