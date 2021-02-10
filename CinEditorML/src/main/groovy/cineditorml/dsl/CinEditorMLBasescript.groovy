@@ -1,31 +1,45 @@
 package main.groovy.cineditorml.dsl
 
-import fr.circular.cineditorml.kernel.behavioral.DigitalAction
-import fr.circular.cineditorml.kernel.behavioral.LOGICAL
-import fr.circular.cineditorml.kernel.behavioral.NOTE
-import fr.circular.cineditorml.kernel.behavioral.DURATION
-import fr.circular.cineditorml.kernel.behavioral.ToneAction
-import fr.circular.cineditorml.kernel.behavioral.Action
-import fr.circular.cineditorml.kernel.behavioral.State
-import fr.circular.cineditorml.kernel.structural.Actuator
-import fr.circular.cineditorml.kernel.structural.Sensor
-import fr.circular.cineditorml.kernel.structural.SIGNAL
+import fr.circular.cineditorml.kernel.behavioral.DurationInstruction
+import fr.circular.cineditorml.kernel.behavioral.TextPositionInstruction
+import fr.circular.cineditorml.kernel.structural.Clip
+import fr.circular.cineditorml.kernel.structural.TextClip
 
 abstract class CinEditorMLBasescript extends Script {
 	// sensor "name" pin n
-	def sensor(String name) {
-		[pin: { n -> ((CinEditorMLBinding)this.getBinding()).getCinEditorMLModel().createSensor(name, n) },
-		onPin: { n -> ((CinEditorMLBinding)this.getBinding()).getCinEditorMLModel().createSensor(name, n)}]
-	}
-	
-	// actuator "name" pin n
-	def actuator(String name) {
-		[pin: { n -> ((CinEditorMLBinding)this.getBinding()).getCinEditorMLModel().createActuator(name, n) }]
+	def videoClip(String path) {
+		[named: { name -> ((CinEditorMLBinding)this.getBinding()).getCinEditorMLModel().createVideoFileClip(name, path) }]
 	}
 
-	def buzzer(String name) {
-		[pin: { n -> ((CinEditorMLBinding)this.getBinding()).getCinEditorMLModel().createBuzzer(name, n) }]
+	def text(String content) {
+		[named: { name ->
+			[duration: { time ->
+				((CinEditorMLBinding)this.getBinding()).getCinEditorMLModel().createTextClip(name, content, time)
+				[at: { position ->
+					TextClip text = (name instanceof String ? (TextClip)((CinEditorMLBinding)this.getBinding()).getVariable(name) : (TextClip)name)
+					text.addInstruction(new TextPositionInstruction(position))
+				}]
+			}]
+		} ]
 	}
+
+	def backgroundClip(String color) {
+		[named: { name ->
+			[duration: { time ->
+				((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createTextClip(name, color, time)
+			}]
+		}]
+	}
+
+	def addText(String textName) {
+		[on: { clipName ->
+			TextClip text = (textName instanceof String ? (TextClip)((CinEditorMLBinding)this.getBinding()).getVariable(textName) : (TextClip)textName)
+			Clip clip = (clipName instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(clipName) : (Clip)clipName)
+			((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createMergeClip(clip, text)
+		}]
+	}
+
+
 	
 	// state "name" means actuator becomes signal [and actuator becomes signal]*n
 	def state(String name) {

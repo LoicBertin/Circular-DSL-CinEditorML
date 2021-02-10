@@ -23,6 +23,33 @@ public class CinEditorMLModel {
 		this.clips = new ArrayList<Clip>();
 		this.binding = binding;
 	}
+
+	public void createVideoFileClip(String name, String path) {
+		VideoClip videoClip = new VideoClip();
+		videoClip.setName(name);
+		videoClip.setFile(path);
+		this.clips.add(videoClip);
+		this.binding.setVariable(name, videoClip);
+	}
+
+	public void createTextClip(String name, String text, String time) {
+		TextClip textClip = new TextClip();
+		textClip.setName(name);
+		textClip.setText(text);
+		textClip.addInstruction(new DurationInstruction(time));
+		this.clips.add(textClip);
+		this.binding.setVariable(name, textClip);
+	}
+
+	public void createMergeClip(String clip, String text) {
+		MergeClip mergeClip = new MergeClip();
+		mergeClip.setName(name);
+		textClip.setText(text);
+		textClip.addInstruction(new DurationInstruction(time));
+		this.clips.add(textClip);
+		this.binding.setVariable(name, textClip);
+	}
+
 	/*
 	public void createSensor(String name, Integer pinNumber) {
 		Sensor sensor = new Sensor();

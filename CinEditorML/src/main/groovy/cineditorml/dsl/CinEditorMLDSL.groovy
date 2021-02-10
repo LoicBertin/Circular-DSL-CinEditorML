@@ -1,10 +1,9 @@
 package main.groovy.cineditorml.dsl
 
-import fr.circular.cineditorml.kernel.behavioral.NOTE
-import fr.circular.cineditorml.kernel.behavioral.DURATION
+import fr.circular.cineditorml.kernel.behavioral.COLOR
+import fr.circular.cineditorml.kernel.behavioral.POSITION
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.SecureASTCustomizer
-import fr.circular.cineditorml.kernel.structural.SIGNAL
 
 class CinEditorMLDSL {
 	private GroovyShell shell
@@ -19,17 +18,18 @@ class CinEditorMLDSL {
 		configuration.setScriptBaseClass("main.groovy.cineditorml.dsl.CinEditorMLBasescript")
 		shell = new GroovyShell(configuration)
 		
-		binding.setVariable("high", SIGNAL.HIGH)
-		binding.setVariable("low", SIGNAL.LOW)
+		binding.setVariable("center", POSITION.center)
+		binding.setVariable("top", POSITION.North)
+		binding.setVariable("bottom", POSITION.South)
+		binding.setVariable("left", POSITION.West)
+		binding.setVariable("right", POSITION.East)
 
-		binding.setVariable("C4", NOTE.C4)
-		binding.setVariable("G3", NOTE.G3)
-		binding.setVariable("A3", NOTE.A3)
-		binding.setVariable("B3", NOTE.B3)
-		binding.setVariable("STOP", NOTE.STOP)
+		binding.setVariable("RED",   COLOR.RED)
+		binding.setVariable("GREEN", COLOR.GREEN)
+		binding.setVariable("BLUE",  COLOR.BLUE)
+		binding.setVariable("BLACK", COLOR.BLACK)
+		binding.setVariable("WHITE", COLOR.WHITE)
 
-		binding.setVariable("short", DURATION.SHORT)
-		binding.setVariable("long", DURATION.LONG)
 	}
 	
 	private static CompilerConfiguration getDSLConfiguration() {
