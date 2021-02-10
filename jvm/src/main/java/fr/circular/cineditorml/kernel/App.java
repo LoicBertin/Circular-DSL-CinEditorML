@@ -11,6 +11,7 @@ public class App implements NamedElement, Visitable {
 
 	private String name;
 	private List<Clip> clips = new ArrayList<Clip>();
+	private String path;
 
 	@Override
 	public String getName() {
@@ -28,6 +29,15 @@ public class App implements NamedElement, Visitable {
 
 	public void setClips(List<Clip> clips) {
 		this.clips = clips;
+	}
+
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	@Override

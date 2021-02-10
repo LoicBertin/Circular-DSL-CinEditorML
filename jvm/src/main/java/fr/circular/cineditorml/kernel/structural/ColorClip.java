@@ -1,23 +1,24 @@
 package fr.circular.cineditorml.kernel.structural;
 
+import fr.circular.cineditorml.kernel.behavioral.COLOR;
 import fr.circular.cineditorml.kernel.generator.Visitor;
 
 public class ColorClip extends Clip {
-    private String color;
+    private COLOR color;
 
     public ColorClip() {
-        this.color = "(0, 0, 0)";
+        this.color = COLOR.BLACK;
     }
 
-    public ColorClip(String backgroundColor) {
+    public ColorClip(COLOR backgroundColor) {
         this.color = backgroundColor;
     }
 
-    public String getColor() {
+    public COLOR getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(COLOR color) {
         this.color = color;
     }
 

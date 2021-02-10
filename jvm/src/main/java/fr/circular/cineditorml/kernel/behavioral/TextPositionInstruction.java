@@ -6,7 +6,7 @@ public class TextPositionInstruction extends Instruction {
     private POSITION position;
 
     public TextPositionInstruction() {
-        this.position = POSITION.center;
+        this.position = POSITION.CENTER;
     }
 
     public TextPositionInstruction(POSITION position) {

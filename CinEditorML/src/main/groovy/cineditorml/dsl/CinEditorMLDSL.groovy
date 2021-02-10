@@ -18,11 +18,11 @@ class CinEditorMLDSL {
 		configuration.setScriptBaseClass("main.groovy.cineditorml.dsl.CinEditorMLBasescript")
 		shell = new GroovyShell(configuration)
 		
-		binding.setVariable("center", POSITION.center)
-		binding.setVariable("top", POSITION.North)
-		binding.setVariable("bottom", POSITION.South)
-		binding.setVariable("left", POSITION.West)
-		binding.setVariable("right", POSITION.East)
+		binding.setVariable("CENTER", POSITION.CENTER)
+		binding.setVariable("TOP", POSITION.NORTH)
+		binding.setVariable("BOTTOM", POSITION.SOUTH)
+		binding.setVariable("LEFT", POSITION.WEST)
+		binding.setVariable("RIGHT", POSITION.EAST)
 
 		binding.setVariable("RED",   COLOR.RED)
 		binding.setVariable("GREEN", COLOR.GREEN)

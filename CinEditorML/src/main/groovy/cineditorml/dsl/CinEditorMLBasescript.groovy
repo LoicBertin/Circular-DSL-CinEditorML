@@ -1,5 +1,6 @@
 package main.groovy.cineditorml.dsl
 
+import fr.circular.cineditorml.kernel.behavioral.COLOR
 import fr.circular.cineditorml.kernel.behavioral.DurationInstruction
 import fr.circular.cineditorml.kernel.behavioral.TextPositionInstruction
 import fr.circular.cineditorml.kernel.structural.Clip
@@ -13,7 +14,7 @@ abstract class CinEditorMLBasescript extends Script {
 
 	def text(String content) {
 		[named: { name ->
-			[duration: { time ->
+			[during: { time ->
 				((CinEditorMLBinding)this.getBinding()).getCinEditorMLModel().createTextClip(name, content, time)
 				[at: { position ->
 					TextClip text = (name instanceof String ? (TextClip)((CinEditorMLBinding)this.getBinding()).getVariable(name) : (TextClip)name)
@@ -23,10 +24,10 @@ abstract class CinEditorMLBasescript extends Script {
 		} ]
 	}
 
-	def backgroundClip(String color) {
+	def backgroundClip(COLOR color) {
 		[named: { name ->
-			[duration: { time ->
-				((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createTextClip(name, color, time)
+			[during: { time ->
+				((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createColorClip(name, color, time)
 			}]
 		}]
 	}
@@ -39,45 +40,22 @@ abstract class CinEditorMLBasescript extends Script {
 		}]
 	}
 
-
-	
-	// state "name" means actuator becomes signal [and actuator becomes signal]*n
-	def state(String name) {
-		List<Action> actions = new ArrayList<Action>()
-		((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createState(name, actions)
-		// recursive closure to allow multiple and statements
-		def closure
-		closure = { actuator ->
-			[becomes: { signal ->
-				DigitalAction action = new DigitalAction()
-				action.setActuator(actuator instanceof String ? (Actuator)((CinEditorMLBinding)this.getBinding()).getVariable(actuator) : (Actuator)actuator)
-				action.setSignal(signal instanceof String ? (SIGNAL)((CinEditorMLBinding)this.getBinding()).getVariable(signal) : (SIGNAL)signal)
-				actions.add(action)
-				[and: closure]
-			},
-			 plays: { note ->
-				ToneAction action = new ToneAction()
-				action.setActuator(actuator instanceof String ? (Actuator)((CinEditorMLBinding)this.getBinding()).getVariable(actuator) : (Actuator)actuator)
-				action.setNote(note instanceof String ? (NOTE)((CinEditorMLBinding)this.getBinding()).getVariable(note) : (NOTE)note)
-				actions.add(action)
-				[and: closure,
-				for : { duration ->
-					[duration : { time ->
-						actions.get(actions.size() - 1).setDuration(duration instanceof String ? (DURATION) ((CinEditorMLBinding) this.getBinding()).getVariable(duration) : (DURATION) duration)
-						actions.get(actions.size() - 1).setNumberOfIteration(time)
-						["time" : null]
-					}]
-				}]
-			 }]
-		}
-		[means: closure]
-	}
-	
-	// initial state
-	def initial(state) {
-		((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().setInitialState(state instanceof String ? (State)((CinEditorMLBinding)this.getBinding()).getVariable(state) : (State)state)
+	def makeVideoClip(String name) {
+		[with: { cName ->
+			ArrayList<Clip> clips = new ArrayList<Clip>();
+			Clip clip = (cName instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(cName) : (Clip)cName)
+			clips.add(clip)
+			def closure
+			closure = [{ clipName ->
+				clip = (clipName instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(clipName) : (Clip)clipName)
+				clips.add(clip)
+			}]
+			[then: closure]
+			((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().concatenateClips(clips, name)
+		}]
 	}
 
+/*
 	// from state1 to state2 when sensor [and/or sensor]*n becomes signal
 	def from(state1) {
 		List<Sensor> sensors = new ArrayList<Sensor>();
@@ -116,27 +94,18 @@ abstract class CinEditorMLBasescript extends Script {
 			}
 			closureand = { sensor ->
 				sensors.add(sensor instanceof String ? (Sensor)((CinEditorMLBinding)this.getBinding()).getVariable(sensor) : (Sensor)sensor)
-				[and: closureand,
-				 or: closureor,
-				 xor: closurexor,
-				 becomes: { signal ->
-					 ((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createTransition(
-							 state1 instanceof String ? (State)((CinEditorMLBinding)this.getBinding()).getVariable(state1) : (State)state1,
-							 state2 instanceof String ? (State)((CinEditorMLBinding)this.getBinding()).getVariable(state2) : (State)state2,
-							 sensors,
-							 signal instanceof String ? (SIGNAL)((CinEditorMLBinding)this.getBinding()).getVariable(signal) : (SIGNAL)signal,
-							 LOGICAL.AND)
-				 }]
+				[then: closureand]
 			}
 			[when: closureand]
 		}]
 	}
-	
+
+ */
+
 	// export name
-	def export(String name) {
-		println(((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().generateCode(name).toString())
+	def export(String name, String path) {
+		println(((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().generateCode(name, path).toString())
 	}
-	
 	// disable run method while running
 	int count = 0
 	abstract void scriptBody()

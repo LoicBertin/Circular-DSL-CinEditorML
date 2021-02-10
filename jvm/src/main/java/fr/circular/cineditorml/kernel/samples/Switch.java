@@ -15,7 +15,7 @@ public class Switch {
 		clip1.setName("clip1");
 		clip1.setText("Les vacances de Noël");
 
-		TextPositionInstruction centeredPositionInstruction = new TextPositionInstruction(POSITION.center);
+		TextPositionInstruction centeredPositionInstruction = new TextPositionInstruction(POSITION.CENTER);
 		clip1.addInstruction(centeredPositionInstruction);
 
 		DurationInstruction duration10Instruction = new DurationInstruction("10");
@@ -23,7 +23,7 @@ public class Switch {
 
 		ColorClip clip1_color = new ColorClip();
 		clip1_color.setName("clip1_color");
-		clip1_color.setColor("(0,0,0)");
+		clip1_color.setColor(COLOR.BLACK);
 		clip1_color.addInstruction(duration10Instruction);
 
 		MergeClip clip1_merged = new MergeClip();
@@ -46,7 +46,7 @@ public class Switch {
 
 		ColorClip clip4_color = new ColorClip();
 		clip4_color.setName("clip4_color");
-		clip4_color.setColor("(0,0,0)");
+		clip4_color.setColor(COLOR.BLACK);
 
 		DurationInstruction duration15Instruction = new DurationInstruction("15");
 		clip4.addInstruction(duration15Instruction);
