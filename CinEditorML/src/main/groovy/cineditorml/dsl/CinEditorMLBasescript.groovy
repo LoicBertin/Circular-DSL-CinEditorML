@@ -41,19 +41,37 @@ abstract class CinEditorMLBasescript extends Script {
 	}
 
 	def makeVideoClip(String name) {
+		((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().changeName(name)
+		ArrayList<Clip> clips = new ArrayList<Clip>();
+		def closure
+		closure = { clipNamebis ->
+			println(clipNamebis)
+			Clip clip2 = (clipNamebis instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(clipNamebis) : (Clip)clipNamebis)
+			((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().addClip(clip2)
+			[then: closure]
+		}
+		[with : {cName ->
+			Clip clip = (cName instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(cName) : (Clip)cName)
+			((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().addClip(clip)
+			[then: closure]
+		}]
+	}
+
+/*
+	def makeVideoClip(String name) {
 		[with: { cName ->
+
 			ArrayList<Clip> clips = new ArrayList<Clip>();
 			Clip clip = (cName instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(cName) : (Clip)cName)
 			clips.add(clip)
-			def closure
-			closure = [{ clipName ->
-				clip = (clipName instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(clipName) : (Clip)clipName)
-				clips.add(clip)
+
+
+			[then: { clipName ->
+				println(clipName)
 			}]
-			[then: closure]
-			((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().concatenateClips(clips, name)
+			//((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().concatenateClips(clips, name)
 		}]
-	}
+	}*/
 
 /*
 	// from state1 to state2 when sensor [and/or sensor]*n becomes signal
@@ -103,8 +121,10 @@ abstract class CinEditorMLBasescript extends Script {
  */
 
 	// export name
-	def export(String name, String path) {
-		println(((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().generateCode(name, path).toString())
+	def export(String name) {
+		[at : { path ->
+			println(((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().generateCode(name, path).toString())
+		}]
 	}
 	// disable run method while running
 	int count = 0

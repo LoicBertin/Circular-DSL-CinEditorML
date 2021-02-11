@@ -51,6 +51,14 @@ public class CinEditorMLModel {
 		this.binding.setVariable(clip.getName(), mergeClip);
 	}
 
+	public void addClip(Clip clip){
+		this.clips.add(clip);
+	}
+
+	public void changeName(String name){
+		this.name = name;
+	}
+
 	public void concatenateClips(ArrayList<Clip> clips, String name) {
 		this.name = name;
 		this.clips = clips;
