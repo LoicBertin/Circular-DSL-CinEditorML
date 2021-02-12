@@ -11,4 +11,4 @@ addText "textOutro" on "outroClip"
 
 makeVideoClip "final" with "introClip" then "clip1" then "clip2" then "outroClip"
 
-export "final" at "/resources/video"
+export "final" at "resources/result_videos"

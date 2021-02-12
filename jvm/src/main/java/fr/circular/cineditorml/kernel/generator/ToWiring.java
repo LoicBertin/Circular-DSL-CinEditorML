@@ -52,7 +52,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 	@Override
 	public void visit(TextPositionInstruction positionInstruction) {
 		//txt_clip.with_duration(10)
-		w(String.format(".set_position(\"%s\")", positionInstruction.getPosition()));
+		w(String.format(".set_position(\"%s\")", positionInstruction.getPosition().position));
 	}
 
 
@@ -82,7 +82,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 
 	@Override
 	public void visit(ColorClip colorClip) {
-		w(String.format("%s= ColorClip(size=(1920,1080), color=%s)", colorClip.getName(),colorClip.getColor()));
+		w(String.format("%s= ColorClip(size=(1920,1080), color=%s)", colorClip.getName(),colorClip.getColor().color));
 		for(Instruction instruction : colorClip.getInstructions()){
 			instruction.accept(this);
 		}
