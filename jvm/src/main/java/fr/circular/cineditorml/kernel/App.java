@@ -11,6 +11,7 @@ public class App implements NamedElement, Visitable {
 
 	private String name;
 	private List<Clip> clips = new ArrayList<Clip>();
+	private List<Clip> clipsToAccept = new ArrayList<>();
 	private String path;
 
 	@Override
@@ -38,6 +39,14 @@ public class App implements NamedElement, Visitable {
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	public List<Clip> getClipsToAccept() {
+		return clipsToAccept;
+	}
+
+	public void setClipsToAccept(List<Clip> clipsToAccept) {
+		this.clipsToAccept = clipsToAccept;
 	}
 
 	@Override

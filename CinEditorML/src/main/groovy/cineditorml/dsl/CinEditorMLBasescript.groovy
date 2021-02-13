@@ -5,11 +5,23 @@ import fr.circular.cineditorml.kernel.behavioral.DurationInstruction
 import fr.circular.cineditorml.kernel.behavioral.TextPositionInstruction
 import fr.circular.cineditorml.kernel.structural.Clip
 import fr.circular.cineditorml.kernel.structural.TextClip
+import fr.circular.cineditorml.kernel.structural.VideoClip
 
 abstract class CinEditorMLBasescript extends Script {
 	// sensor "name" pin n
 	def videoClip(String path) {
 		[named: { name -> ((CinEditorMLBinding)this.getBinding()).getCinEditorMLModel().createVideoFileClip(name, path) }]
+	}
+
+	def subClipOf(String clipName) {
+		VideoClip video = (clipName instanceof String ? (VideoClip)((CinEditorMLBinding)this.getBinding()).getVariable(clipName) : (VideoClip)clipName)
+		[from: {from ->
+			[to: { to ->
+				[named: { name ->
+					((CinEditorMLBinding)this.getBinding()).getCinEditorMLModel().createSubClip(video, from, to, name)
+				}]
+			}]
+		}]
 	}
 
 	def text(String content) {
@@ -56,69 +68,6 @@ abstract class CinEditorMLBasescript extends Script {
 			[then: closure]
 		}]
 	}
-
-/*
-	def makeVideoClip(String name) {
-		[with: { cName ->
-
-			ArrayList<Clip> clips = new ArrayList<Clip>();
-			Clip clip = (cName instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(cName) : (Clip)cName)
-			clips.add(clip)
-
-
-			[then: { clipName ->
-				println(clipName)
-			}]
-			//((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().concatenateClips(clips, name)
-		}]
-	}*/
-
-/*
-	// from state1 to state2 when sensor [and/or sensor]*n becomes signal
-	def from(state1) {
-		List<Sensor> sensors = new ArrayList<Sensor>();
-		State state2save;
-		[to: { state2 ->
-			def closureor
-			def closurexor
-			def closureand
-			closureor = { sensor ->
-				sensors.add(sensor instanceof String ? (Sensor)((CinEditorMLBinding)this.getBinding()).getVariable(sensor) : (Sensor)sensor)
-				[and: closureand,
-				 or: closureor,
-				 xor: closurexor,
-				 becomes: { signal ->
-					 ((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createTransition(
-							 state1 instanceof String ? (State)((CinEditorMLBinding)this.getBinding()).getVariable(state1) : (State)state1,
-							 state2 instanceof String ? (State)((CinEditorMLBinding)this.getBinding()).getVariable(state2) : (State)state2,
-							 sensors,
-							 signal instanceof String ? (SIGNAL)((CinEditorMLBinding)this.getBinding()).getVariable(signal) : (SIGNAL)signal,
-							 LOGICAL.OR)
-				 }]
-			}
-			closurexor = { sensor ->
-				sensors.add(sensor instanceof String ? (Sensor)((CinEditorMLBinding)this.getBinding()).getVariable(sensor) : (Sensor)sensor)
-				[and: closureand,
-				 or: closureor,
-				 xor: closurexor,
-				 becomes: { signal ->
-					 ((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createTransition(
-							 state1 instanceof String ? (State)((CinEditorMLBinding)this.getBinding()).getVariable(state1) : (State)state1,
-							 state2 instanceof String ? (State)((CinEditorMLBinding)this.getBinding()).getVariable(state2) : (State)state2,
-							 sensors,
-							 signal instanceof String ? (SIGNAL)((CinEditorMLBinding)this.getBinding()).getVariable(signal) : (SIGNAL)signal,
-							 LOGICAL.XOR)
-				 }]
-			}
-			closureand = { sensor ->
-				sensors.add(sensor instanceof String ? (Sensor)((CinEditorMLBinding)this.getBinding()).getVariable(sensor) : (Sensor)sensor)
-				[then: closureand]
-			}
-			[when: closureand]
-		}]
-	}
-
- */
 
 	// export name
 	def export(String name) {

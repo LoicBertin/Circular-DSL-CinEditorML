@@ -23,7 +23,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 		w("from moviepy.editor import *\n");
 		w("from moviepy.video import *\n");
 
-		for(Clip clip: app.getClips()){
+		for(Clip clip: app.getClipsToAccept()){
 			clip.accept(this);
 		}
 
@@ -76,6 +76,14 @@ public class ToWiring extends Visitor<StringBuffer> {
 	public void visit(VideoClip videoClip) {
 		w(String.format("%s = VideoFileClip(\"%s\")\n", videoClip.getName(), videoClip.getFile()));
 		for(Instruction instruction : videoClip.getInstructions()){
+			this.visit(instruction);
+		}
+	}
+
+	@Override
+	public void visit(VideoSubClip videoSubClip) {
+		w(String.format("%s = %s.subclip(%s,%s)\n", videoSubClip.getName(), videoSubClip.getVideoName(), videoSubClip.getFrom(), videoSubClip.getTo()));
+		for(Instruction instruction : videoSubClip.getInstructions()){
 			this.visit(instruction);
 		}
 	}

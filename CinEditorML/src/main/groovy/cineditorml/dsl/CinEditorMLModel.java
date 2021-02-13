@@ -11,12 +11,14 @@ import fr.circular.cineditorml.kernel.generator.Visitor;
 
 public class CinEditorMLModel {
 	private List<Clip> clips;
+	private List<Clip> clipsToAccept;
 	private String name;
 	
 	private Binding binding;
 	
 	public CinEditorMLModel(Binding binding) {
 		this.clips = new ArrayList<Clip>();
+		this.clipsToAccept = new ArrayList<Clip>();
 		this.binding = binding;
 	}
 
@@ -25,6 +27,18 @@ public class CinEditorMLModel {
 		videoClip.setName(name);
 		videoClip.setFile(path);
 		this.binding.setVariable(name, videoClip);
+		this.clipsToAccept.add(videoClip);
+	}
+
+	public void createSubClip(VideoClip clip, int from, int to, String name) {
+		VideoSubClip video = new VideoSubClip();
+		video.setVideoName(clip.getName());
+		video.setName(name);
+		video.setFrom(from);
+		video.setTo(to);
+		video.setFile(clip.getFile());
+		this.binding.setVariable(name, video);
+		this.clipsToAccept.add(video);
 	}
 
 	public void createTextClip(String name, String text, String time) {
@@ -49,6 +63,7 @@ public class CinEditorMLModel {
 		mergeClip.addClip(clip);
 		mergeClip.addClip(text);
 		this.binding.setVariable(clip.getName(), mergeClip);
+		this.clipsToAccept.add(mergeClip);
 	}
 
 	public void addClip(Clip clip){
@@ -70,6 +85,7 @@ public class CinEditorMLModel {
 		app.setName(name);
 		app.setPath(path);
 		app.setClips(this.clips);
+		app.setClipsToAccept(this.clipsToAccept);
 		Visitor codeGenerator = new ToWiring();
 		app.accept(codeGenerator);
 		

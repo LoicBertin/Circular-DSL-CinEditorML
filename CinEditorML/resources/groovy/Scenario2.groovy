@@ -1,13 +1,16 @@
-sensor "button" pin 9
-sensor "button2" pin 10
-buzzer "buzzer" pin 13
+text "Intro Title" named "textIntro" during "10" at CENTER
+backgroundClip BLACK named "introClip" during "10"
+addText "textIntro" on "introClip"
 
-state "on" means  buzzer plays C4
-state "off" means buzzer plays STOP
+videoClip "resources/video/dj_rexma.mp4" named "clip1"
+subClipOf "clip1" from 1 to 4 named "clip1a"
+subClipOf "clip1" from 5 to 7 named "clip1b"
 
-initial off
+text "THANKS FOR WATCHING" named "textOutro" during "10" at CENTER
+backgroundClip BLACK named "outroClip" during "10"
+addText "textOutro" on "outroClip"
 
-from off to on when button and button2 becomes high
-from on to off when button xor button2 becomes high
+makeVideoClip "scenario2" with "introClip" then "clip1a" then "clip1b" then "outroClip"
 
-export "Rendu1Scenario2"
+
+export "scenario2" at "resources/result_videos"

@@ -9,6 +9,6 @@ text "THANKS FOR WATCHING" named "textOutro" during "15" at CENTER
 backgroundClip BLACK named "outroClip" during "15"
 addText "textOutro" on "outroClip"
 
-makeVideoClip "final" with "introClip" then "clip1" then "clip2" then "outroClip"
+makeVideoClip "scenario1" with "introClip" then "clip1" then "clip2" then "outroClip"
 
-export "final" at "resources/result_videos"
+export "scenario1" at "resources/result_videos"
