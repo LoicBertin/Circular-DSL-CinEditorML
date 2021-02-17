@@ -19,10 +19,10 @@ class CinEditorMLDSL {
 		shell = new GroovyShell(configuration)
 		
 		binding.setVariable("CENTER", POSITION.CENTER)
-		binding.setVariable("TOP", POSITION.NORTH)
-		binding.setVariable("BOTTOM", POSITION.SOUTH)
-		binding.setVariable("LEFT", POSITION.WEST)
-		binding.setVariable("RIGHT", POSITION.EAST)
+		binding.setVariable("TOP", POSITION.TOP)
+		binding.setVariable("BOTTOM", POSITION.BOTTOM)
+		binding.setVariable("LEFT", POSITION.LEFT)
+		binding.setVariable("RIGHT", POSITION.RIGHT)
 
 		binding.setVariable("RED",   COLOR.RED)
 		binding.setVariable("GREEN", COLOR.GREEN)

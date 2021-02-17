@@ -47,6 +47,7 @@ public class CinEditorMLModel {
 		textClip.setText(text);
 		textClip.addInstruction(new DurationInstruction(time));
 		this.binding.setVariable(name, textClip);
+		this.clipsToAccept.add(textClip);
 	}
 
 	public void createColorClip(String name, COLOR color, String time) {
@@ -55,6 +56,7 @@ public class CinEditorMLModel {
 		colorClip.setColor(color);
 		colorClip.addInstruction(new DurationInstruction(time));
 		this.binding.setVariable(name, colorClip);
+		this.clipsToAccept.add(colorClip);
 	}
 
 	public void createMergeClip(Clip clip, TextClip text) {

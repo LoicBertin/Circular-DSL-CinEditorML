@@ -2,10 +2,10 @@ package fr.circular.cineditorml.kernel.behavioral;
 
 public enum POSITION {
     CENTER("center"),
-    EAST("East"),
-    WEST("West"),
-    SOUTH("South"),
-    NORTH("North");
+    LEFT("left"),
+    RIGHT("right"),
+    BOTTOM("bottom"),
+    TOP("top");
 
     public final String position;
 

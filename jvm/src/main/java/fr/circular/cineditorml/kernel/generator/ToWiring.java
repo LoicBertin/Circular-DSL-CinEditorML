@@ -99,10 +99,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 
 	@Override
 	public void visit(MergeClip mergeClip) {
-		for(Clip clip : mergeClip.getClips()) {
-			clip.accept(this);
-		}
-			w(String.format("%s = CompositeVideoClip([", mergeClip.getName()));
+		w(String.format("%s = CompositeVideoClip([", mergeClip.getName()));
 		for(Clip clip : mergeClip.getClips()){
 			w(clip.getName());
 			if(mergeClip.getClips().indexOf(clip) != mergeClip.getClips().size()-1){
