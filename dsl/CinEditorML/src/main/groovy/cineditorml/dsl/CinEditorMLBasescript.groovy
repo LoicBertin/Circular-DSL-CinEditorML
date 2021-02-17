@@ -57,7 +57,6 @@ abstract class CinEditorMLBasescript extends Script {
 		ArrayList<Clip> clips = new ArrayList<Clip>();
 		def closure
 		closure = { clipNamebis ->
-			println(clipNamebis)
 			Clip clip2 = (clipNamebis instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(clipNamebis) : (Clip)clipNamebis)
 			((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().addClip(clip2)
 			[then: closure]
