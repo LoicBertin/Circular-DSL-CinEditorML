@@ -9,7 +9,7 @@ import fr.circular.cineditorml.kernel.structural.VideoClip
 
 abstract class CinEditorMLBasescript extends Script {
 
-	def videoClip(String path) {
+	def importVideoClip(String path) {
 		[named: { name -> ((CinEditorMLBinding)this.getBinding()).getCinEditorMLModel().createVideoFileClip(name, path) }]
 	}
 
@@ -49,16 +49,19 @@ abstract class CinEditorMLBasescript extends Script {
 					Clip text = (t instanceof String ? (Clip) ((CinEditorMLBinding) this.getBinding()).getVariable(t) : (Clip) t)
 					[at: { position ->
 						text.addInstruction(new PositionInstruction(position))
-						((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createMergeClip(clip, text, name)
 						[from: { from ->
 							[to: { to ->
 								String textClipName = "transparent".concat(name)
 								time = to - from
 								((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createTemporalTextClipWithTransparentBackground(text, from, to, position, name)
-								text.addInstruction(new DurationInstruction(time));
+								text.addInstruction(new DurationInstruction(time))
 								text = (textClipName instanceof String ? (Clip) ((CinEditorMLBinding) this.getBinding()).getVariable(textClipName) : (Clip) textClipName)
 								((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createMergeClip(clip, text, name)
 							}]
+						},
+						with_same_duration_as_background: { bool ->
+							text.addInstruction(new DurationInstruction(time))
+							((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createMergeClip(clip, text, name)
 						}]
 					}]
 				}]
