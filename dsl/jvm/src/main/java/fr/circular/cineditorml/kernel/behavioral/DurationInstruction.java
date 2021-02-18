@@ -5,21 +5,21 @@ import fr.circular.cineditorml.kernel.structural.Clip;
 
 public class DurationInstruction extends Instruction{
 
-    String duration;
+    private int duration;
 
     public DurationInstruction(){
-        this.duration = "5";
+        this.duration = 5;
     }
 
-    public DurationInstruction(String d){
+    public DurationInstruction(int d){
         this.duration = d;
     }
 
-    public String getDuration() {
+    public int getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 

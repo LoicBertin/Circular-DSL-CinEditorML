@@ -30,27 +30,51 @@ public class CinEditorMLModel {
 		this.clipsToAccept.add(videoClip);
 	}
 
-	public void createSubClip(VideoClip clip, int from, int to, String name) {
-		VideoSubClip video = new VideoSubClip();
-		video.setVideoName(clip.getName());
-		video.setName(name);
-		video.setFrom(from);
-		video.setTo(to);
-		video.setFile(clip.getFile());
-		this.binding.setVariable(name, video);
-		this.clipsToAccept.add(video);
+	public void createSubClip(Clip clip, int from, int to, String name) {
+		SubClip subClip = new SubClip();
+		subClip.setClipName(clip.getName());
+		subClip.setName(name);
+		subClip.setFrom(from);
+		subClip.setTo(to);
+		this.binding.setVariable(name, subClip);
+		this.clipsToAccept.add(subClip);
 	}
 
-	public void createTextClip(String name, String text, String time) {
+	public void createTextClip(String name, String text) {
 		TextClip textClip = new TextClip();
 		textClip.setName(name);
 		textClip.setText(text);
-		textClip.addInstruction(new DurationInstruction(time));
 		this.binding.setVariable(name, textClip);
 		this.clipsToAccept.add(textClip);
 	}
 
-	public void createColorClip(String name, COLOR color, String time) {
+	public void createTemporalTextClipWithTransparentBackground(TextClip text, int from, int to, POSITION position, String name) {
+		String temporalTextClip = "temporised".concat(name);
+		this.createTextClip(temporalTextClip, " ");
+
+		String transparentColorClipName = "transparentColorClip".concat(name);
+		ColorClip colorClip = new ColorClip();
+		colorClip.setName(transparentColorClipName);
+		colorClip.addInstruction(new OpacityInstruction(0));
+		colorClip.addInstruction(new DurationInstruction(to));
+		this.binding.setVariable(colorClip.getName(), colorClip);
+		this.clipsToAccept.add(colorClip);
+
+		Clip textClip = (Clip)this.binding.getVariable(temporalTextClip);
+		textClip.addInstruction(new DurationInstruction(from));
+		// concatenate textClip text
+		ConcatenateClip concatenateClip = new ConcatenateClip();
+		concatenateClip.setName("concatenated".concat(name));
+		concatenateClip.addClip(textClip);
+		concatenateClip.addClip(text);
+		concatenateClip.addInstruction(new PositionInstruction(position));
+		this.binding.setVariable(concatenateClip.getName(), concatenateClip);
+		this.clipsToAccept.add(concatenateClip);
+
+		this.createMergeClip(colorClip, concatenateClip, "transparent".concat(name));
+	}
+
+	public void createColorClip(String name, COLOR color, int time) {
 		ColorClip colorClip = new ColorClip();
 		colorClip.setName(name);
 		colorClip.setColor(color);
@@ -59,12 +83,12 @@ public class CinEditorMLModel {
 		this.clipsToAccept.add(colorClip);
 	}
 
-	public void createMergeClip(Clip clip, TextClip text) {
+	public void createMergeClip(Clip clip1, Clip clip2, String name) {
 		MergeClip mergeClip = new MergeClip();
-		mergeClip.setName(clip.getName());
-		mergeClip.addClip(clip);
-		mergeClip.addClip(text);
-		this.binding.setVariable(clip.getName(), mergeClip);
+		mergeClip.setName(name);
+		mergeClip.addClip(clip1);
+		mergeClip.addClip(clip2);
+		this.binding.setVariable(name, mergeClip);
 		this.clipsToAccept.add(mergeClip);
 	}
 

@@ -15,10 +15,10 @@ public class Switch {
 		clip1.setName("clip1");
 		clip1.setText("Les vacances de Noël");
 
-		TextPositionInstruction centeredPositionInstruction = new TextPositionInstruction(POSITION.CENTER);
+		PositionInstruction centeredPositionInstruction = new PositionInstruction(POSITION.CENTER);
 		clip1.addInstruction(centeredPositionInstruction);
 
-		DurationInstruction duration10Instruction = new DurationInstruction("10");
+		DurationInstruction duration10Instruction = new DurationInstruction(10);
 		clip1.addInstruction(duration10Instruction);
 
 		ColorClip clip1_color = new ColorClip();
@@ -48,7 +48,7 @@ public class Switch {
 		clip4_color.setName("clip4_color");
 		clip4_color.setColor(COLOR.BLACK);
 
-		DurationInstruction duration15Instruction = new DurationInstruction("15");
+		DurationInstruction duration15Instruction = new DurationInstruction(15);
 		clip4.addInstruction(duration15Instruction);
 		clip4_color.addInstruction(duration15Instruction);
 

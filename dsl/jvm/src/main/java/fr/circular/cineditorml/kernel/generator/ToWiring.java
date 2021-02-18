@@ -50,9 +50,15 @@ public class ToWiring extends Visitor<StringBuffer> {
 	}
 
 	@Override
-	public void visit(TextPositionInstruction positionInstruction) {
+	public void visit(PositionInstruction positionInstruction) {
 		//txt_clip.with_duration(10)
 		w(String.format(".set_position(\"%s\")", positionInstruction.getPosition().position));
+	}
+
+	@Override
+	public void visit(OpacityInstruction opacityInstruction) {
+		//txt_clip.set_opacity(0)
+		w(String.format(".set_opacity(%s)", opacityInstruction.getOpacity()));
 	}
 
 
@@ -76,15 +82,15 @@ public class ToWiring extends Visitor<StringBuffer> {
 	public void visit(VideoClip videoClip) {
 		w(String.format("%s = VideoFileClip(\"%s\")\n", videoClip.getName(), videoClip.getFile()));
 		for(Instruction instruction : videoClip.getInstructions()){
-			this.visit(instruction);
+			instruction.accept(this);
 		}
 	}
 
 	@Override
-	public void visit(VideoSubClip videoSubClip) {
-		w(String.format("%s = %s.subclip(%s,%s)\n", videoSubClip.getName(), videoSubClip.getVideoName(), videoSubClip.getFrom(), videoSubClip.getTo()));
-		for(Instruction instruction : videoSubClip.getInstructions()){
-			this.visit(instruction);
+	public void visit(SubClip subClip) {
+		w(String.format("%s = %s.subclip(%s,%s)\n", subClip.getName(), subClip.getClipName(), subClip.getFrom(), subClip.getTo()));
+		for(Instruction instruction : subClip.getInstructions()){
+			instruction.accept(this);
 		}
 	}
 
@@ -106,6 +112,26 @@ public class ToWiring extends Visitor<StringBuffer> {
 				w(",");
 			}
 		}
-		w("])\n");
+		w("])");
+		for(Instruction instruction : mergeClip.getInstructions()){
+			instruction.accept(this);
+		}
+		w("\n");
+	}
+
+	@Override
+	public void visit(ConcatenateClip concatenateClip) {
+		w(String.format("%s = concatenate_videoclips([", concatenateClip.getName()));
+		for(Clip clip : concatenateClip.getClips()){
+			w(clip.getName());
+			if(concatenateClip.getClips().indexOf(clip) != concatenateClip.getClips().size()-1){
+				w(",");
+			}
+		}
+		w("])");
+		for(Instruction instruction : concatenateClip.getInstructions()){
+			instruction.accept(this);
+		}
+		w("\n");
 	}
 }

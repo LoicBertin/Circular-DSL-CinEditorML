@@ -13,13 +13,15 @@ public abstract class Visitor<T> {
 
 	public abstract void visit(Instruction instruction);
 	public abstract void visit(DurationInstruction durationInstruction);
-	public abstract void visit(TextPositionInstruction positionInstruction);
+	public abstract void visit(PositionInstruction positionInstruction);
+	public abstract void visit(OpacityInstruction opacityInstruction);
 	public abstract void visit(Clip clip);
 	public abstract void visit(TextClip textClip);
 	public abstract void visit(VideoClip videoClip);
-	public abstract void visit(VideoSubClip videoSubClip);
+	public abstract void visit(SubClip subClip);
 	public abstract void visit(ColorClip colorClip);
 	public abstract void visit(MergeClip mergeClip);
+	public abstract void visit(ConcatenateClip concatenateClip);
 
 
 	/***********************

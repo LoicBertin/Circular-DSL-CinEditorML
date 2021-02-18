@@ -2,13 +2,13 @@ package main.groovy.cineditorml.dsl
 
 import fr.circular.cineditorml.kernel.behavioral.COLOR
 import fr.circular.cineditorml.kernel.behavioral.DurationInstruction
-import fr.circular.cineditorml.kernel.behavioral.TextPositionInstruction
+import fr.circular.cineditorml.kernel.behavioral.PositionInstruction
 import fr.circular.cineditorml.kernel.structural.Clip
 import fr.circular.cineditorml.kernel.structural.TextClip
 import fr.circular.cineditorml.kernel.structural.VideoClip
 
 abstract class CinEditorMLBasescript extends Script {
-	// sensor "name" pin n
+
 	def videoClip(String path) {
 		[named: { name -> ((CinEditorMLBinding)this.getBinding()).getCinEditorMLModel().createVideoFileClip(name, path) }]
 	}
@@ -26,14 +26,66 @@ abstract class CinEditorMLBasescript extends Script {
 
 	def text(String content) {
 		[named: { name ->
+			((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createTextClip(name, content)
 			[during: { time ->
-				((CinEditorMLBinding)this.getBinding()).getCinEditorMLModel().createTextClip(name, content, time)
+				TextClip text = (name instanceof String ? (TextClip) ((CinEditorMLBinding) this.getBinding()).getVariable(name) : (TextClip) name)
+				text.addInstruction(new DurationInstruction(time));
 				[at: { position ->
-					TextClip text = (name instanceof String ? (TextClip)((CinEditorMLBinding)this.getBinding()).getVariable(name) : (TextClip)name)
-					text.addInstruction(new TextPositionInstruction(position))
+					text.addInstruction(new PositionInstruction(position))
 				}]
 			}]
-		} ]
+		}]
+	}
+
+	def createClip(String name) {
+		[during: { time ->
+			[with_background: {background ->
+				String c = ("background".concat(name))
+				((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createColorClip(c, (COLOR)background, time)
+				Clip clip = (c instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(c) : (Clip)c)
+				[with_text: { content ->
+					String t = ("text".concat(name))
+					((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createTextClip(t, content)
+					Clip text = (t instanceof String ? (Clip) ((CinEditorMLBinding) this.getBinding()).getVariable(t) : (Clip) t)
+					[at: { position ->
+						text.addInstruction(new PositionInstruction(position))
+						((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createMergeClip(clip, text, name)
+						[from: { from ->
+							[to: { to ->
+								String textClipName = "transparent".concat(name)
+								time = to - from
+								((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createTemporalTextClipWithTransparentBackground(text, from, to, position, name)
+								text.addInstruction(new DurationInstruction(time));
+								text = (textClipName instanceof String ? (Clip) ((CinEditorMLBinding) this.getBinding()).getVariable(textClipName) : (Clip) textClipName)
+								((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createMergeClip(clip, text, name)
+							}]
+						}]
+					}]
+				}]
+			}]
+		},
+		with_background: {background ->
+			Clip clip = (background instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(background) : (Clip)background)
+			[with_text: { content ->
+				String t = ("text".concat(name))
+				((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createTextClip(t, content)
+				Clip text = (t instanceof String ? (Clip) ((CinEditorMLBinding) this.getBinding()).getVariable(t) : (Clip) t)
+				[at: { position ->
+					text.addInstruction(new PositionInstruction(position))
+					[from: { from ->
+						[to: { to ->
+							String textClipName = "concatenated".concat(name)
+							int time = to - from
+							((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createTemporalTextClipWithTransparentBackground(text, from, to, position, name)
+							text.addInstruction(new DurationInstruction(time));
+							text = (textClipName instanceof String ? (Clip) ((CinEditorMLBinding) this.getBinding()).getVariable(textClipName) : (Clip) textClipName)
+							((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createMergeClip(clip, text, name)
+						}]
+					}]
+				}]
+			}]
+		}]
+
 	}
 
 	def backgroundClip(COLOR color) {
@@ -48,7 +100,7 @@ abstract class CinEditorMLBasescript extends Script {
 		[on: { clipName ->
 			TextClip text = (textName instanceof String ? (TextClip)((CinEditorMLBinding)this.getBinding()).getVariable(textName) : (TextClip)textName)
 			Clip clip = (clipName instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(clipName) : (Clip)clipName)
-			((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createMergeClip(clip, text)
+			((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createMergeClip(clip, text, clip.getName())
 		}]
 	}
 
