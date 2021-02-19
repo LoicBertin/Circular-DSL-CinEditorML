@@ -1,0 +1,17 @@
+importVideoClip
+named
+subClipOf
+from
+to
+text
+during
+at
+createClip
+with_background
+with_text
+with_same_duration_as_background
+backgroundClip
+addText
+makeVideoClip
+then
+export
