@@ -105,13 +105,9 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="f7d23" class="javax.swing.JTextArea" binding="dslArea">
+          <component id="ff4d1" class="javax.swing.JTextPane" binding="dslArea">
             <constraints/>
-            <properties>
-              <background color="-9079435"/>
-              <foreground color="-2"/>
-              <margin top="0" left="0" bottom="0" right="0"/>
-            </properties>
+            <properties/>
           </component>
         </children>
       </scrollpane>

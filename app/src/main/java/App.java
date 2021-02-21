@@ -1,7 +1,9 @@
+import highlight.Highlight;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,8 +12,8 @@ import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.List;
 
-public class App extends JFrame implements DocumentListener {
-    private JTextArea dslArea;
+public class App extends JFrame implements DocumentListener, ActionListener {
+    private JTextPane dslArea;
     private JButton visualizeButton;
     private JTextArea pythonArea;
     private JButton importButton;
@@ -22,6 +24,14 @@ public class App extends JFrame implements DocumentListener {
     private JLabel labelPython;
 
     private List<String> keyWords;
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        System.out.println(e);
+        Highlight highlight = new Highlight(keyWords);
+        highlight.highlight(this.dslArea);
+    }
+
     private static enum Mode { INSERT, COMPLETION };
     private static final String COMMIT_ACTION = "commit";
     private Mode mode = Mode.INSERT;
@@ -32,6 +42,8 @@ public class App extends JFrame implements DocumentListener {
         this.pack();
         this.setSize(1280,720);
         this.setVisible(true);
+
+        visualizeButton.addActionListener(this);
 
         setUpAutoCompletion();
 
@@ -48,8 +60,8 @@ public class App extends JFrame implements DocumentListener {
                         Scanner myReader = new Scanner(openedFile);
                         while (myReader.hasNextLine()) {
                             String data = myReader.nextLine();
-                            dslArea.append(data);
-                            dslArea.append("\n");
+                            appendToPane(dslArea, data, Color.BLACK);
+                            appendToPane(dslArea, "\n", Color.BLACK);
                         }
                         myReader.close();
                     } catch (FileNotFoundException e1) {
@@ -60,6 +72,16 @@ public class App extends JFrame implements DocumentListener {
             }
         });
 
+    }
+
+    private void appendToPane(JTextPane tp, String msg, Color color) {
+        StyleContext sc = StyleContext.getDefaultStyleContext();
+        AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, color);
+
+        int len = tp.getDocument().getLength();
+        tp.setCaretPosition(len);
+        tp.setCharacterAttributes(aset, false);
+        tp.replaceSelection(msg);
     }
 
     public void setUpAutoCompletion(){
@@ -158,7 +180,8 @@ public class App extends JFrame implements DocumentListener {
         }
 
         public void run() {
-            dslArea.insert(completion, position);
+            appendToPane(dslArea, completion, Color.BLACK);
+            //dslArea.insert(completion, position);
             dslArea.setCaretPosition(position + completion.length());
             dslArea.moveCaretPosition(position);
             mode = Mode.COMPLETION;
@@ -169,7 +192,8 @@ public class App extends JFrame implements DocumentListener {
         public void actionPerformed(ActionEvent ev) {
             if (mode == Mode.COMPLETION) {
                 int pos = dslArea.getSelectionEnd();
-                dslArea.insert(" ", pos);
+                appendToPane(dslArea, " ", Color.BLACK);
+                //dslArea.insert(" ", pos);
                 dslArea.setCaretPosition(pos + 1);
                 mode = Mode.INSERT;
             } else {
