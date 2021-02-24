@@ -96,6 +96,23 @@ public class CinEditorMLModel {
 		this.clips.add(clip);
 	}
 
+	public void initSubtitleClip(String name, Clip clip) {
+		SubtitleClip subtitleClip = new SubtitleClip();
+		subtitleClip.setName(name);
+		subtitleClip.setClip(clip);
+		this.binding.setVariable(name, subtitleClip);
+		this.clipsToAccept.add(subtitleClip);
+	}
+
+	public void addSubtitle(int from, int to, POSITION position, String text, SubtitleClip subtitleClip) {
+		Subtitle subtitle = new Subtitle();
+		subtitle.setFrom(from);
+		subtitle.setTo(to);
+		subtitle.setPosition(position);
+		subtitle.setTxt(text);
+		subtitleClip.addSubtitle(subtitle);
+	}
+
 	public void changeName(String name){
 		this.name = name;
 	}

@@ -4,7 +4,9 @@ import fr.circular.cineditorml.kernel.behavioral.COLOR
 import fr.circular.cineditorml.kernel.behavioral.DurationInstruction
 import fr.circular.cineditorml.kernel.behavioral.POSITION
 import fr.circular.cineditorml.kernel.behavioral.PositionInstruction
+import fr.circular.cineditorml.kernel.behavioral.Subtitle
 import fr.circular.cineditorml.kernel.structural.Clip
+import fr.circular.cineditorml.kernel.structural.SubtitleClip
 import fr.circular.cineditorml.kernel.structural.TextClip
 import fr.circular.cineditorml.kernel.structural.VideoClip
 
@@ -39,30 +41,35 @@ abstract class CinEditorMLBasescript extends Script {
 	}
 
 	def createClip(String name) {
+		def closure_text
+		closure_text = { content ->
+				SubtitleClip subtitleClip = (name instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(name) : (Clip)name)
+				[at: { position ->
+					[from: { from ->
+						[to: { to ->
+							((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().addSubtitle(from, to, position, content, subtitleClip)
+							[and_with_text: closure_text]
+						}]
+					}]
+				}]
+		}
 		[during: { time ->
 			[with_background: {background ->
 				String c = ("background".concat(name))
 				((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createColorClip(c, (COLOR)background, time)
 				Clip clip = (c instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(c) : (Clip)c)
 				[with_text: { content ->
-					String t = ("text".concat(name))
-					((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createTextClip(t, content)
-					Clip text = (t instanceof String ? (Clip) ((CinEditorMLBinding) this.getBinding()).getVariable(t) : (Clip) t)
+					((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().initSubtitleClip(name, clip)
+					SubtitleClip subtitleClip = (name instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(name) : (Clip)name)
 					[at: { position ->
-						text.addInstruction(new PositionInstruction(position))
 						[from: { from ->
+							if (from > 0) {
+								// create subtitle de 0 à from
+								((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().addSubtitle(0, from, POSITION.BOTTOM, " ", subtitleClip)
+							}
 							[to: { to ->
-								String textClipName = "transparent".concat(name)
-								time = to - from
-								((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createTemporalTextClipWithTransparentBackground(text, from, to, position, name)
-								text.addInstruction(new DurationInstruction(time))
-								text = (textClipName instanceof String ? (Clip) ((CinEditorMLBinding) this.getBinding()).getVariable(textClipName) : (Clip) textClipName)
-								((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createMergeClip(clip, text, name)
+								((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().addSubtitle(from, to, position, content, subtitleClip)
 							}]
-						},
-						with_same_duration_as_background: { bool ->
-							text.addInstruction(new DurationInstruction(time))
-							((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createMergeClip(clip, text, name)
 						}]
 					}]
 				}]
@@ -70,20 +77,18 @@ abstract class CinEditorMLBasescript extends Script {
 		},
 		with_background: {background ->
 			Clip clip = (background instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(background) : (Clip)background)
+			((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().initSubtitleClip(name, clip)
 			[with_text: { content ->
-				String t = ("text".concat(name))
-				((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createTextClip(t, content)
-				Clip text = (t instanceof String ? (Clip) ((CinEditorMLBinding) this.getBinding()).getVariable(t) : (Clip) t)
+				SubtitleClip subtitleClip = (name instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(name) : (Clip)name)
 				[at: { position ->
-					text.addInstruction(new PositionInstruction(position))
 					[from: { from ->
+						if (from > 0) {
+							// create subtitle de 0 à from
+							((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().addSubtitle(0, from, POSITION.BOTTOM, " ", subtitleClip)
+						}
 						[to: { to ->
-							String textClipName = "concatenated".concat(name)
-							int time = to - from
-							((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createTemporalTextClipWithTransparentBackground(text, from, to, position, name)
-							text.addInstruction(new DurationInstruction(time));
-							text = (textClipName instanceof String ? (Clip) ((CinEditorMLBinding) this.getBinding()).getVariable(textClipName) : (Clip) textClipName)
-							((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createMergeClip(clip, text, name)
+							((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().addSubtitle(from, to, position, content, subtitleClip)
+							[and_with_text: closure_text]
 						}]
 					}]
 				}]
