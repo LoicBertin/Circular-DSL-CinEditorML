@@ -1,20 +1,14 @@
 package highlight;
 
 import javax.swing.*;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
+import javax.swing.text.*;
 import java.awt.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 public class Highlight {
 
-    private List<String> keywords;
+    private final List<String> keywords;
+    private String previousWord;
 
     public Highlight(List<String> keywords) {
         this.keywords = keywords;
@@ -22,41 +16,64 @@ public class Highlight {
 
     public void highlight(JTextPane tp) {
         String content = tp.getText();
+        if (!content.endsWith("\n")) {
+            content += "\n";
+        }
+        content = content.replace("\n", " \n ");
         String[] words = content.split(" ");
-        System.out.println(Arrays.toString(words));
         tp.setText("");
-        tp.updateUI();
-        System.out.println(tp.getText());
 
-        for (String word : words) {
-            StyleContext sc = StyleContext.getDefaultStyleContext();
+        SimpleAttributeSet defaultAttr = new SimpleAttributeSet();
+        StyleConstants.setForeground(defaultAttr, Color.BLACK);
+
+        SimpleAttributeSet keywordAttr = new SimpleAttributeSet();
+        StyleConstants.setForeground(keywordAttr, Color.BLUE);
+
+        SimpleAttributeSet missingAttr = new SimpleAttributeSet();
+        StyleConstants.setForeground(missingAttr, Color.RED);
+        StyleConstants.setUnderline(missingAttr, true);
+
+        for (int i = 0; i < words.length; i++) {
+            String word = words[i];
+            String nextWord = "", previousWord = "";
+            if (i < words.length - 1) {
+                nextWord = words[+1];
+            }
+            if (i > 0) {
+                previousWord = words[i-1];
+            }
             AttributeSet aset;
 
             if (keywords.contains(word)) {
-                aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, Color.RED);
+                aset = keywordAttr;
             } else {
-                aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, Color.BLACK);
+                aset = defaultAttr;
             }
-
-            int len = tp.getDocument().getLength();
-            tp.setCaretPosition(len);
-            tp.setCharacterAttributes(aset, false);
-            tp.replaceSelection(content);
+            System.out.println("Current word : " + word);
+            System.out.println("Previous word : " + previousWord);
+            if (word.contains("\n")) {
+                if (keywords.contains(previousWord)) {
+                    System.out.println("YES");
+                    write(tp, "value", missingAttr);
+                }
+                write(tp, word, defaultAttr);
+            } else {
+                if (nextWord.equals("\n")) {
+                    write(tp, word, aset);
+                } else {
+                    write(tp, word + " ", aset);
+                }
+            }
+            System.out.println("------------------");
         }
     }
 
-    public void importKeywords(){
+    void write(JTextPane textPane, String content, AttributeSet attributeSet) {
+        StyledDocument doc = textPane.getStyledDocument();
+        int len = doc.getLength();
         try {
-            File myObj = new File("./src/main/resources/keywords.txt");
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                String[] splited = data.split("\\s+");
-                keywords.addAll(Arrays.asList(splited));
-            }
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
+            doc.insertString(len, content, attributeSet);
+        } catch (BadLocationException e) {
             e.printStackTrace();
         }
     }
