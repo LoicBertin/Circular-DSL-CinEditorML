@@ -35,7 +35,7 @@ public class ToWiring extends Visitor<StringBuffer> {
 			}
 		}
 		w("])\n");
-		w(String.format("result.write_videofile(\"%s/%s.webm\",fps=25)", app.getPath(), app.getName()));
+		w(String.format("result.write_videofile(\"%s/%s.webm\",fps=25, threads=4)", app.getPath(), app.getName()));
 	}
 
 	@Override

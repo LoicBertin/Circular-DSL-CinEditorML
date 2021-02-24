@@ -48,7 +48,7 @@ public class CinEditorMLModel {
 		this.clipsToAccept.add(textClip);
 	}
 
-	public void createTemporalTextClipWithTransparentBackground(TextClip text, int from, int to, POSITION position, String name) {
+	public void createTemporalTextClipWithTransparentBackground(Clip text, int from, int to, POSITION position, String name) {
 		String temporalTextClip = "temporised".concat(name);
 		this.createTextClip(temporalTextClip, " ");
 

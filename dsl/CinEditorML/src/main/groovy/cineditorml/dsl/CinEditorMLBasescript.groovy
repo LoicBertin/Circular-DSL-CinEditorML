@@ -2,6 +2,7 @@ package main.groovy.cineditorml.dsl
 
 import fr.circular.cineditorml.kernel.behavioral.COLOR
 import fr.circular.cineditorml.kernel.behavioral.DurationInstruction
+import fr.circular.cineditorml.kernel.behavioral.POSITION
 import fr.circular.cineditorml.kernel.behavioral.PositionInstruction
 import fr.circular.cineditorml.kernel.structural.Clip
 import fr.circular.cineditorml.kernel.structural.TextClip
@@ -100,7 +101,27 @@ abstract class CinEditorMLBasescript extends Script {
 	}
 
 	def addText(String textName) {
-		[on: { clipName ->
+		[at: { POSITION position ->
+			String random = (Math.random() * 100000).toInteger() as String
+			String t = ("text").concat(random)
+			((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createTextClip(t, textName)
+			Clip text = (t instanceof String ? (Clip) ((CinEditorMLBinding) this.getBinding()).getVariable(t) : (Clip) t)
+			text.addInstruction(new PositionInstruction(position))
+			[from: { from ->
+				[to: { to ->
+					String textClipName = "concatenated".concat(random)
+					int time = to - from
+					((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createTemporalTextClipWithTransparentBackground(text, from, to, position,  random)
+					text.addInstruction(new DurationInstruction(time));
+					text = (textClipName instanceof String ? (Clip) ((CinEditorMLBinding) this.getBinding()).getVariable(textClipName) : (Clip) textClipName)
+					[on: { clipName ->
+						Clip clip = (clipName instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(clipName) : (Clip)clipName)
+						((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createMergeClip(clip, text, clip.getName())
+					}]
+				}]
+			}]
+		},
+		 on: { clipName ->
 			TextClip text = (textName instanceof String ? (TextClip)((CinEditorMLBinding)this.getBinding()).getVariable(textName) : (TextClip)textName)
 			Clip clip = (clipName instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(clipName) : (Clip)clipName)
 			((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createMergeClip(clip, text, clip.getName())
