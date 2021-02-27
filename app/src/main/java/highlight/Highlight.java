@@ -3,6 +3,7 @@ package highlight;
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Highlight {
@@ -16,10 +17,10 @@ public class Highlight {
 
     public void highlight(JTextPane tp) {
         String content = tp.getText();
-        if (!content.endsWith("\n")) {
-            content += "\n";
+        if (!content.endsWith(System.lineSeparator())) {
+            content += System.lineSeparator();
         }
-        content = content.replace("\n", " \n ");
+        content = content.replace(System.lineSeparator(), " " + System.lineSeparator() + " ");
         String[] words = content.split(" ");
         tp.setText("");
 
@@ -51,14 +52,14 @@ public class Highlight {
             }
             System.out.println("Current word : " + word);
             System.out.println("Previous word : " + previousWord);
-            if (word.contains("\n")) {
+            if (word.contains(System.lineSeparator())) {
                 if (keywords.contains(previousWord)) {
                     System.out.println("YES");
                     write(tp, "value", missingAttr);
                 }
                 write(tp, word, defaultAttr);
             } else {
-                if (nextWord.equals("\n")) {
+                if (nextWord.equals(System.lineSeparator())) {
                     write(tp, word, aset);
                 } else {
                     write(tp, word + " ", aset);
