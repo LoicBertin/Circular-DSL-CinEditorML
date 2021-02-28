@@ -10,13 +10,12 @@ import java.util.List;
 public class Highlight {
 
     private final List<String> keywords;
-    private String previousWord;
 
     public Highlight(List<String> keywords) {
         this.keywords = keywords;
     }
 
-    public void highlight(JTextPane tp) {
+    public boolean highlight(JTextPane tp) {
         String content = tp.getText();
         List<String> lines = new ArrayList<>(Arrays.asList(content.split(System.lineSeparator())));
         tp.setText("");
@@ -30,6 +29,8 @@ public class Highlight {
         SimpleAttributeSet missingAttr = new SimpleAttributeSet();
         StyleConstants.setForeground(missingAttr, Color.RED);
         StyleConstants.setUnderline(missingAttr, true);
+
+        boolean isValid = true;
 
         for (String line : lines) {
             String[] words = line.split("\\s+");
@@ -55,6 +56,7 @@ public class Highlight {
                     } else {
                         countWrong++;
                         aset = missingAttr;
+                        isValid = false;
                     }
                 }
                 if (!nextWord.equals("")) {
@@ -66,9 +68,12 @@ public class Highlight {
 
             if ((words.length - countWrong) % 2 != 0) {
                 write(tp, " missingValue", missingAttr);
+                isValid = false;
             }
             write(tp, System.lineSeparator(), defaultAttr);
         }
+
+        return isValid;
     }
 
     void write(JTextPane textPane, String content, AttributeSet attributeSet) {

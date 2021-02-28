@@ -9,12 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.*;
 import java.util.List;
 
-public class App extends JFrame implements DocumentListener, ActionListener {
+public class App extends JFrame implements DocumentListener {
     private JTextPane dslArea;
     private JButton visualizeButton;
     private JTextArea pythonArea;
@@ -26,13 +25,6 @@ public class App extends JFrame implements DocumentListener, ActionListener {
     private JLabel labelPython;
 
     private List<String> keyWords;
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        System.out.println(e);
-        Highlight highlight = new Highlight(keyWords);
-        highlight.highlight(this.dslArea);
-    }
 
     private static enum Mode { INSERT, COMPLETION };
     private static final String COMMIT_ACTION = "commit";
@@ -46,31 +38,50 @@ public class App extends JFrame implements DocumentListener, ActionListener {
         this.setSize(1280,720);
         this.setVisible(true);
 
-        visualizeButton.addActionListener(this);
+        visualizeButton.addActionListener(e -> {
+            Highlight highlight = new Highlight(keyWords);
+            boolean isContentValidated = highlight.highlight(dslArea);
+            if (isContentValidated) {
+                /*String command = "ping www.codejava.net";
+
+                try {
+                    Process process = Runtime.getRuntime().exec(command);
+
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        System.out.println(line);
+                    }
+                    reader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }*/
+            } else {
+                JOptionPane.showMessageDialog(this, "Le contenu n'est pas correct !",
+                        "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+        });
 
         setUpAutoCompletion();
 
         final JFrame frame = new JFrame("Open File Example");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
-        importButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser chooser = new JFileChooser();
-                if (chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
-                    File openedFile = chooser.getSelectedFile();
-                    try {
-                        Scanner myReader = new Scanner(openedFile);
-                        while (myReader.hasNextLine()) {
-                            String data = myReader.nextLine();
-                            appendToPane(dslArea, data, Color.BLACK);
-                            appendToPane(dslArea, "\n", Color.BLACK);
-                        }
-                        myReader.close();
-                    } catch (FileNotFoundException e1) {
-                        System.out.println("An error occurred.");
-                        e1.printStackTrace();
+        importButton.addActionListener(e -> {
+            JFileChooser chooser = new JFileChooser();
+            if (chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
+                File openedFile = chooser.getSelectedFile();
+                try {
+                    Scanner myReader = new Scanner(openedFile);
+                    while (myReader.hasNextLine()) {
+                        String data = myReader.nextLine();
+                        appendToPane(dslArea, data, Color.BLACK);
+                        appendToPane(dslArea, "\n", Color.BLACK);
                     }
+                    myReader.close();
+                } catch (FileNotFoundException e1) {
+                    System.out.println("An error occurred.");
+                    e1.printStackTrace();
                 }
             }
         });
@@ -90,7 +101,7 @@ public class App extends JFrame implements DocumentListener, ActionListener {
     public void setUpAutoCompletion(){
         dslArea.getDocument().addDocumentListener(this);
 
-        keyWords = new ArrayList<String>();
+        keyWords = new ArrayList<>();
         importKeyWords();
 
         InputMap im = dslArea.getInputMap();
