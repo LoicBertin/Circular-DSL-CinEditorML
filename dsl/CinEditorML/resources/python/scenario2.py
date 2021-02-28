@@ -18,9 +18,11 @@ def flatten(l,result = []):
         return result
 
 backgroundintroClip= ColorClip(size=(1920,1080), color=(0, 0, 0)).set_duration(10)
-subs0 =[((0, 4), ' ', 'bottom', 'white'),
+subs0 =[
 ((4, 7), 'Intro Title', 'center', 'white'),
-((7, backgroundintroClip.duration), ' ', 'bottom', 'white')]
+((0, 4), ' ', 'bottom', 'white'),
+((7, 10), 'subtitle', 'bottom', 'white'),
+((10, backgroundintroClip.duration), ' ', 'bottom', 'white')]
 introClip = [annotate(backgroundintroClip.subclip(from_t, to_t), txt, position, color) for (from_t, to_t), txt, position, color in subs0]
 clip1 = VideoFileClip("resources/video/alderamin 1.webm")
 clip1a = clip1.subclip(23,107)

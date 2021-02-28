@@ -69,6 +69,7 @@ abstract class CinEditorMLBasescript extends Script {
 							}
 							[to: { to ->
 								((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().addSubtitle(from, to, position, content, subtitleClip)
+								[and_with_text: closure_text]
 							}]
 						}]
 					}]

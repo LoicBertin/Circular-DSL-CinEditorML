@@ -1,4 +1,4 @@
-createClip "introClip" during 10 with_background BLACK with_text "Intro Title" at CENTER from 4 to 7
+createClip "introClip" during 10 with_background BLACK with_text "Intro Title" at CENTER from 0 to 10
 
 importVideoClip "resources/video/alderamin 1.webm" named "clip1"
 subClipOf "clip1" from 23 to 107 named "clip1a"
