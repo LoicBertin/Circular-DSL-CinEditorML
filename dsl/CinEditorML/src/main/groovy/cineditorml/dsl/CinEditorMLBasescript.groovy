@@ -107,31 +107,37 @@ abstract class CinEditorMLBasescript extends Script {
 	}
 
 	def addText(String textName) {
-		[at: { POSITION position ->
-			String random = (Math.random() * 100000).toInteger() as String
-			String t = ("text").concat(random)
-			((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createTextClip(t, textName)
-			Clip text = (t instanceof String ? (Clip) ((CinEditorMLBinding) this.getBinding()).getVariable(t) : (Clip) t)
-			text.addInstruction(new PositionInstruction(position))
-			[from: { from ->
-				[to: { to ->
-					String textClipName = "concatenated".concat(random)
-					int time = to - from
-					((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createTemporalTextClipWithTransparentBackground(text, from, to, position,  random)
-					text.addInstruction(new DurationInstruction(time));
-					text = (textClipName instanceof String ? (Clip) ((CinEditorMLBinding) this.getBinding()).getVariable(textClipName) : (Clip) textClipName)
-					[on: { clipName ->
-						Clip clip = (clipName instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(clipName) : (Clip)clipName)
-						((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createMergeClip(clip, text, clip.getName())
-					}]
-				}]
-			}]
-		},
-		 on: { clipName ->
-			TextClip text = (textName instanceof String ? (TextClip)((CinEditorMLBinding)this.getBinding()).getVariable(textName) : (TextClip)textName)
-			Clip clip = (clipName instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(clipName) : (Clip)clipName)
-			((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createMergeClip(clip, text, clip.getName())
-		}]
+		def closure
+		closure = { clipName ->
+			TextClip text = null
+			try {
+				text = (textName instanceof String ? (TextClip)((CinEditorMLBinding)this.getBinding()).getVariable(textName) : (TextClip)textName)
+			}catch(MissingPropertyException e){
+
+			}
+			if(text != null){
+				Clip clip = (clipName instanceof String ? (Clip)((CinEditorMLBinding)this.getBinding()).getVariable(clipName) : (Clip)clipName)
+				((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createMergeClip(clip, text, clip.getName())
+			}else{
+				Clip clip = (clipName instanceof String ? ((CinEditorMLBinding)this.getBinding()).getVariable(clipName) : clipName)
+				SubtitleClip clipCasted
+				if(clip instanceof SubtitleClip){
+					clipCasted = (SubtitleClip)clip
+				}else{
+					((CinEditorMLBinding)this.getBinding()).getCinEditorMLModel().initSubtitleClip(clipName,clip)
+					clipCasted = (clipName instanceof String ? (SubtitleClip)((CinEditorMLBinding)this.getBinding()).getVariable(clipName) : (SubtitleClip)clipName)
+				}
+				[at: { time ->
+					((CinEditorMLBinding)this.getBinding()).getCinEditorMLModel().addSubtitle(time,9999,POSITION.BOTTOM,textName,clipCasted)
+					[before_the_end_and_on: closure]
+				},
+				 during: { time ->
+					 ((CinEditorMLBinding)this.getBinding()).getCinEditorMLModel().addSubtitle(0,time,POSITION.BOTTOM,textName,clipCasted)
+					 [and_on: closure]
+				 }]
+			}
+		}
+		[on: closure]
 	}
 
 	def makeVideoClip(String name) {

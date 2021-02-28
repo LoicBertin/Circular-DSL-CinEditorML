@@ -154,19 +154,29 @@ public class ToWiring extends Visitor<StringBuffer> {
 	@Override
 	public void visit(SubtitleClip subtitleClip) {
 		ArrayList<Subtitle> subtitles = new ArrayList<Subtitle>();
+		ArrayList<Subtitle> tempSubtitles = new ArrayList<Subtitle>();
+		Subtitle finalSubtitle = null;
 		if (subtitleClip.getSubtitles().size() > 1) {
-			for (int i = 0; i < subtitleClip.getSubtitles().size() - 1; i++) {
-				subtitles.add(subtitleClip.getSubtitles().get(i));
-				if (subtitleClip.getSubtitles().get(i).getTo() != subtitleClip.getSubtitles().get(i + 1).getFrom()) {
+			for (int i = 0; i < subtitleClip.getSubtitles().size(); i++) {
+				System.out.println(subtitleClip.getSubtitles().get(i).getTo());
+				if(subtitleClip.getSubtitles().get(i).getTo() == 9999){
+					finalSubtitle = subtitleClip.getSubtitles().remove(i);
+				}else{
+					tempSubtitles.add(subtitleClip.getSubtitles().get(i));
+				}
+			}
+			for (int i = 0; i < tempSubtitles.size() - 1; i++) {
+				subtitles.add(tempSubtitles.get(i));
+				if (tempSubtitles.get(i).getTo() != tempSubtitles.get(i + 1).getFrom()) {
 					Subtitle subtitle = new Subtitle();
 					subtitle.setTxt(" ");
 					subtitle.setPosition(POSITION.BOTTOM);
-					subtitle.setFrom(subtitleClip.getSubtitles().get(i).getTo());
-					subtitle.setTo(subtitleClip.getSubtitles().get(i + 1).getFrom());
+					subtitle.setFrom(tempSubtitles.get(i).getTo());
+					subtitle.setTo(tempSubtitles.get(i + 1).getFrom());
 					subtitles.add(subtitle);
 				}
-				if (i == subtitleClip.getSubtitles().size() - 2) {
-					subtitles.add(subtitleClip.getSubtitles().get(i + 1));
+				if (i == tempSubtitles.size() - 2) {
+					subtitles.add(tempSubtitles.get(i + 1));
 				}
 			}
 			subtitleClip.setSubtitles(subtitles);
@@ -176,7 +186,12 @@ public class ToWiring extends Visitor<StringBuffer> {
 		for (Subtitle subtitle: subtitleClip.getSubtitles()) {
 			w(String.format("((%s, %s), '%s', '%s', '%s'),\n", subtitle.getFrom(), subtitle.getTo(), subtitle.getTxt(), subtitle.getPosition().position, subtitle.getColor() != null ? subtitle.getColor().color: "white"));
 		}
-		w(String.format("((%s, %s.duration), ' ', '%s', '%s')", subtitleClip.getSubtitles().get(subtitleClip.getSubtitles().size() - 1).getTo(), subtitleClip.getClip().getName(), POSITION.BOTTOM.position, "white"));
+		if(finalSubtitle == null){
+			w(String.format("((%s, %s.duration), ' ', '%s', '%s')", subtitleClip.getSubtitles().get(subtitleClip.getSubtitles().size() - 1).getTo(), subtitleClip.getClip().getName(), POSITION.BOTTOM.position, "white"));
+		}else{
+			w(String.format("((%s, %s.duration - %s), ' ', '%s', '%s'),\n", subtitleClip.getSubtitles().get(subtitleClip.getSubtitles().size() - 1).getTo(), subtitleClip.getClip().getName(), finalSubtitle.getFrom() ,POSITION.BOTTOM.position, "white"));
+			w(String.format("((%s.duration - %s, %s.duration), '%s', '%s', '%s')", subtitleClip.getClip().getName(),finalSubtitle.getFrom(),subtitleClip.getClip().getName(), finalSubtitle.getTxt(), finalSubtitle.getPosition().position, finalSubtitle.getColor() != null ? finalSubtitle.getColor().color: "white"));
+		}
 
 		w("]\n");
 		//annotated_clips = [annotate(video.subclip(from_t, to_t), txt, position) for (from_t, to_t), txt, position in subs]

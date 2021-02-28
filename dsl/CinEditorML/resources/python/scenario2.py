@@ -18,10 +18,7 @@ def flatten(l,result = []):
         return result
 
 backgroundintroClip= ColorClip(size=(1920,1080), color=(0, 0, 0)).set_duration(10)
-subs0 =[
-((4, 7), 'Intro Title', 'center', 'white'),
-((0, 4), ' ', 'bottom', 'white'),
-((7, 10), 'subtitle', 'bottom', 'white'),
+subs0 =[((0, 10), 'Intro Title', 'center', 'white'),
 ((10, backgroundintroClip.duration), ' ', 'bottom', 'white')]
 introClip = [annotate(backgroundintroClip.subclip(from_t, to_t), txt, position, color) for (from_t, to_t), txt, position, color in subs0]
 clip1 = VideoFileClip("resources/video/alderamin 1.webm")
@@ -29,12 +26,16 @@ clip1a = clip1.subclip(23,107)
 subs1 =[((0, 10), 'subclip 1a subtitle', 'bottom', 'white'),
 ((10, 40), ' ', 'bottom', 'white'),
 ((40, 50), 'subclip 1a subtitle 2', 'bottom', 'white'),
-((50, clip1a.duration), ' ', 'bottom', 'white')]
+((50, clip1a.duration - 5), ' ', 'bottom', 'white'),
+((clip1a.duration - 5, clip1a.duration), 'je suis content', 'bottom', 'white')]
 clip1a_with_subtitle = [annotate(clip1a.subclip(from_t, to_t), txt, position, color) for (from_t, to_t), txt, position, color in subs1]
 clip1b = clip1.subclip(121,141)
+subs2 =[((0, 10), 'je suis content', 'bottom', 'white'),
+((10, clip1b.duration), ' ', 'bottom', 'white')]
+clip1b = [annotate(clip1b.subclip(from_t, to_t), txt, position, color) for (from_t, to_t), txt, position, color in subs2]
 backgroundoutroClip= ColorClip(size=(1920,1080), color=(0, 0, 0)).set_duration(10)
-subs2 =[((0, 10), 'THANKS FOR WATCHING', 'center', 'white'),
+subs3 =[((0, 10), 'THANKS FOR WATCHING', 'center', 'white'),
 ((10, backgroundoutroClip.duration), ' ', 'bottom', 'white')]
-outroClip = [annotate(backgroundoutroClip.subclip(from_t, to_t), txt, position, color) for (from_t, to_t), txt, position, color in subs2]
+outroClip = [annotate(backgroundoutroClip.subclip(from_t, to_t), txt, position, color) for (from_t, to_t), txt, position, color in subs3]
 result = concatenate_videoclips(flatten([introClip,clip1a_with_subtitle,clip1b,outroClip]))
 result.write_videofile("resources/result_videos/scenario2.webm",fps=25, threads=4)

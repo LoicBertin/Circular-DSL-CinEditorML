@@ -8,6 +8,8 @@ createClip "clip1a_with_subtitle" with_background "clip1a" with_text "subclip 1a
 subClipOf "clip1" from 121 to 141 named "clip1b"
 //createClip "clip1b_with_subtitle" with_background "clip1b" with_text "subclip 1b subtitle" at BOTTOM from -5 to 10
 
+addText "je suis content" on "clip1a_with_subtitle" at 5 before_the_end_and_on "clip1b" during 10
+
 createClip "outroClip" during 10 with_background BLACK with_text "THANKS FOR WATCHING" at CENTER from 0 to 10
 
 makeVideoClip "scenario2" with "introClip" then "clip1a_with_subtitle" then "clip1b" then "outroClip"
