@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Highlight {
@@ -17,11 +18,7 @@ public class Highlight {
 
     public void highlight(JTextPane tp) {
         String content = tp.getText();
-        if (!content.endsWith(System.lineSeparator())) {
-            content += System.lineSeparator();
-        }
-        content = content.replace(System.lineSeparator(), " " + System.lineSeparator() + " ");
-        String[] words = content.split(" ");
+        List<String> lines = new ArrayList<>(Arrays.asList(content.split(System.lineSeparator())));
         tp.setText("");
 
         SimpleAttributeSet defaultAttr = new SimpleAttributeSet();
@@ -34,38 +31,43 @@ public class Highlight {
         StyleConstants.setForeground(missingAttr, Color.RED);
         StyleConstants.setUnderline(missingAttr, true);
 
-        for (int i = 0; i < words.length; i++) {
-            String word = words[i];
-            String nextWord = "", previousWord = "";
-            if (i < words.length - 1) {
-                nextWord = words[+1];
-            }
-            if (i > 0) {
-                previousWord = words[i-1];
-            }
-            AttributeSet aset;
+        for (String line : lines) {
+            String[] words = line.split("\\s+");
+            int countWrong = 0;
 
-            if (keywords.contains(word)) {
-                aset = keywordAttr;
-            } else {
-                aset = defaultAttr;
-            }
-            System.out.println("Current word : " + word);
-            System.out.println("Previous word : " + previousWord);
-            if (word.contains(System.lineSeparator())) {
-                if (keywords.contains(previousWord)) {
-                    System.out.println("YES");
-                    write(tp, "value", missingAttr);
+            for (int i = 0; i < words.length; i++) {
+                String word = words[i];
+                String nextWord = "", previousWord = "";
+                if (i < words.length - 1) {
+                    nextWord = words[+1];
                 }
-                write(tp, word, defaultAttr);
-            } else {
-                if (nextWord.equals(System.lineSeparator())) {
-                    write(tp, word, aset);
+                if (i > 0) {
+                    previousWord = words[i - 1];
+                }
+
+                AttributeSet aset;
+
+                if (keywords.contains(word)) {
+                    aset = keywordAttr;
                 } else {
+                    if (keywords.contains(previousWord)) {
+                        aset = defaultAttr;
+                    } else {
+                        countWrong++;
+                        aset = missingAttr;
+                    }
+                }
+                if (!nextWord.equals("")) {
                     write(tp, word + " ", aset);
+                } else {
+                    write(tp, word, aset);
                 }
             }
-            System.out.println("------------------");
+
+            if ((words.length - countWrong) % 2 != 0) {
+                write(tp, " missingValue", missingAttr);
+            }
+            write(tp, System.lineSeparator(), defaultAttr);
         }
     }
 
