@@ -6,6 +6,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Highlight {
 
@@ -33,7 +35,12 @@ public class Highlight {
         boolean isValid = true;
 
         for (String line : lines) {
-            String[] words = line.split("\\s+");
+            List<String> list = new ArrayList<>();
+            Matcher m = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(line);
+            while (m.find())
+                list.add(m.group(1));
+
+            String[] words = list.toArray(new String[0]);
             int countWrong = 0;
 
             for (int i = 0; i < words.length; i++) {

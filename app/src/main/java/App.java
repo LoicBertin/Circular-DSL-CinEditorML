@@ -42,7 +42,22 @@ public class App extends JFrame implements DocumentListener {
             Highlight highlight = new Highlight(keyWords);
             boolean isContentValidated = highlight.highlight(dslArea);
             if (isContentValidated) {
-                /*String command = "ping www.codejava.net";
+                // Write content in the UI in a file
+                File fold = new File("./src/main/resources/dslwritten.txt");
+                fold.delete();
+                File fnew = new File("./src/main/resources/dslwritten.txt");
+
+                String source = dslArea.getText();
+                try {
+                    FileWriter f2 = new FileWriter(fnew, false);
+                    f2.write(source);
+                    f2.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+                pythonArea.setText("");
+                // Execute script
+                String command = "java -jar ./src/main/resources/lib/dsl-groovy-1.0-jar-with-dependencies.jar ./src/main/resources/dslwritten.txt";
 
                 try {
                     Process process = Runtime.getRuntime().exec(command);
@@ -50,12 +65,13 @@ public class App extends JFrame implements DocumentListener {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     String line;
                     while ((line = reader.readLine()) != null) {
-                        System.out.println(line);
+                        pythonArea.append(line);
+                        pythonArea.append(System.lineSeparator());
                     }
                     reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }*/
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
             } else {
                 JOptionPane.showMessageDialog(this, "Le contenu n'est pas correct !",
                         "Erreur", JOptionPane.ERROR_MESSAGE);
