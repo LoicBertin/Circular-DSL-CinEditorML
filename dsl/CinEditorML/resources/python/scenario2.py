@@ -1,27 +1,41 @@
 #Code generated from a CineditorML model
 from moviepy.editor import *
 from moviepy.video import *
+
+#cf: https://stackoverflow.com/questions/36667702/adding-subtitles-to-a-movie-using-moviepy
+def annotate(clip, txt, position, txt_color='red', fontsize=50, font='Xolonium-Bold'):
+        txtclip = TextClip(txt, fontsize=fontsize, font=font, color=txt_color)
+        cvc = CompositeVideoClip([clip, txtclip.set_pos(position)])
+        return cvc.set_duration(clip.duration)
+
+#https://stackoverflow.com/questions/23407566/how-to-flatten-a-list-to-return-a-new-list-with-all-the-elements
+def flatten(l,result = []):
+        if isinstance(l, list):
+                for i in l:
+                        flatten(i)
+        else:
+                result.append(l)
+        return result
+
 backgroundintroClip= ColorClip(size=(1920,1080), color=(0, 0, 0)).set_duration(10)
-textintroClip = TextClip(txt="MON AMV TR0 STILET",fontsize=70,color='white').set_position("center").set_duration(3)
-temporisedintroClip = TextClip(txt=" ",fontsize=70,color='white').set_duration(4)
-transparentColorClipintroClip= ColorClip(size=(1920,1080), color=(0, 0, 0)).set_opacity(0.0).set_duration(7)
-concatenatedintroClip = concatenate_videoclips([temporisedintroClip,textintroClip]).set_position("center")
-transparentintroClip = CompositeVideoClip([transparentColorClipintroClip,concatenatedintroClip])
-introClip = CompositeVideoClip([backgroundintroClip,transparentintroClip])
+subs0 =[((0, 10), 'Intro Title', 'center', 'white'),
+((10, backgroundintroClip.duration), ' ', 'bottom', 'white')]
+introClip = [annotate(backgroundintroClip.subclip(from_t, to_t), txt, position, color) for (from_t, to_t), txt, position, color in subs0]
 clip1 = VideoFileClip("resources/video/alderamin 1.webm")
-clip1a = clip1.subclip(1,15)
-textclip1a_with_subtitle = TextClip(txt="gruik GROOOK YATORI SAMAAA",fontsize=70,color='white').set_position("bottom").set_duration(5)
-temporisedclip1a_with_subtitle = TextClip(txt=" ",fontsize=70,color='white').set_duration(7)
-transparentColorClipclip1a_with_subtitle= ColorClip(size=(1920,1080), color=(0, 0, 0)).set_opacity(0.0).set_duration(12)
-concatenatedclip1a_with_subtitle = concatenate_videoclips([temporisedclip1a_with_subtitle,textclip1a_with_subtitle]).set_position("bottom")
-transparentclip1a_with_subtitle = CompositeVideoClip([transparentColorClipclip1a_with_subtitle,concatenatedclip1a_with_subtitle])
-clip1a_with_subtitle = CompositeVideoClip([clip1a,concatenatedclip1a_with_subtitle])
-s2 = TextClip(txt="SUBCLIP 30 SECS AFTER S1",fontsize=70,color='white').set_duration(10).set_position("left")
-clip1b = clip1.subclip(30,45)
-s3 = TextClip(txt="BOUM YA WOW BOOUM YAWOOUW BOOOM BUSHI ISHTA ISSO ONI",fontsize=70,color='white').set_duration(15).set_position("bottom")
-clip1b = CompositeVideoClip([clip1b,s3])
+clip1a = clip1.subclip(23,107)
+subs1 =[((0, 10), 'subclip 1a subtitle', 'bottom', 'white'),
+((10, 40), ' ', 'bottom', 'white'),
+((40, 50), 'subclip 1a subtitle 2', 'bottom', 'white'),
+((50, clip1a.duration - 5), ' ', 'bottom', 'white'),
+((clip1a.duration - 5, clip1a.duration), 'je suis content', 'bottom', 'white')]
+clip1a_with_subtitle = [annotate(clip1a.subclip(from_t, to_t), txt, position, color) for (from_t, to_t), txt, position, color in subs1]
+clip1b = clip1.subclip(121,141)
+subs2 =[((0, 10), 'je suis content', 'bottom', 'white'),
+((10, clip1b.duration), ' ', 'bottom', 'white')]
+clip1b = [annotate(clip1b.subclip(from_t, to_t), txt, position, color) for (from_t, to_t), txt, position, color in subs2]
 backgroundoutroClip= ColorClip(size=(1920,1080), color=(0, 0, 0)).set_duration(10)
-textoutroClip = TextClip(txt="THANKS FOR WATCHING",fontsize=70,color='white').set_position("center").set_duration(10)
-outroClip = CompositeVideoClip([backgroundoutroClip,textoutroClip])
-result = concatenate_videoclips([introClip,clip1a_with_subtitle,clip1b,outroClip])
-result.write_videofile("resources/result_videos/scenario2.webm",fps=25)
+subs3 =[((0, 10), 'THANKS FOR WATCHING', 'center', 'white'),
+((10, backgroundoutroClip.duration), ' ', 'bottom', 'white')]
+outroClip = [annotate(backgroundoutroClip.subclip(from_t, to_t), txt, position, color) for (from_t, to_t), txt, position, color in subs3]
+result = concatenate_videoclips(flatten([introClip,clip1a_with_subtitle,clip1b,outroClip]))
+result.write_videofile("resources/result_videos/scenario2.webm",fps=25, threads=4)

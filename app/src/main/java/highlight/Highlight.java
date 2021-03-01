@@ -1,62 +1,94 @@
 package highlight;
 
 import javax.swing.*;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
+import javax.swing.text.*;
 import java.awt.*;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Highlight {
 
-    private List<String> keywords;
+    private final List<String> keywords;
 
     public Highlight(List<String> keywords) {
         this.keywords = keywords;
     }
 
-    public void highlight(JTextPane tp) {
+    public boolean highlight(JTextPane tp) {
         String content = tp.getText();
-        String[] words = content.split(" ");
-        System.out.println(Arrays.toString(words));
+        List<String> lines = new ArrayList<>(Arrays.asList(content.split(System.lineSeparator())));
         tp.setText("");
-        tp.updateUI();
-        System.out.println(tp.getText());
 
-        for (String word : words) {
-            StyleContext sc = StyleContext.getDefaultStyleContext();
-            AttributeSet aset;
+        SimpleAttributeSet defaultAttr = new SimpleAttributeSet();
+        StyleConstants.setForeground(defaultAttr, Color.BLACK);
 
-            if (keywords.contains(word)) {
-                aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, Color.RED);
-            } else {
-                aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, Color.BLACK);
+        SimpleAttributeSet keywordAttr = new SimpleAttributeSet();
+        StyleConstants.setForeground(keywordAttr, Color.BLUE);
+
+        SimpleAttributeSet missingAttr = new SimpleAttributeSet();
+        StyleConstants.setForeground(missingAttr, Color.RED);
+        StyleConstants.setUnderline(missingAttr, true);
+
+        boolean isValid = true;
+
+        for (String line : lines) {
+            List<String> list = new ArrayList<>();
+            Matcher m = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(line);
+            while (m.find())
+                list.add(m.group(1));
+
+            String[] words = list.toArray(new String[0]);
+            int countWrong = 0;
+
+            for (int i = 0; i < words.length; i++) {
+                String word = words[i];
+                String nextWord = "", previousWord = "";
+                if (i < words.length - 1) {
+                    nextWord = words[+1];
+                }
+                if (i > 0) {
+                    previousWord = words[i - 1];
+                }
+
+                AttributeSet aset;
+
+                if (keywords.contains(word)) {
+                    aset = keywordAttr;
+                } else {
+                    if (keywords.contains(previousWord)) {
+                        aset = defaultAttr;
+                    } else {
+                        countWrong++;
+                        aset = missingAttr;
+                        isValid = false;
+                    }
+                }
+                if (!nextWord.equals("")) {
+                    write(tp, word + " ", aset);
+                } else {
+                    write(tp, word, aset);
+                }
             }
 
-            int len = tp.getDocument().getLength();
-            tp.setCaretPosition(len);
-            tp.setCharacterAttributes(aset, false);
-            tp.replaceSelection(content);
+            if ((words.length - countWrong) % 2 != 0) {
+                write(tp, " missingValue", missingAttr);
+                isValid = false;
+            }
+            write(tp, System.lineSeparator(), defaultAttr);
         }
+
+        return isValid;
     }
 
-    public void importKeywords(){
+    void write(JTextPane textPane, String content, AttributeSet attributeSet) {
+        StyledDocument doc = textPane.getStyledDocument();
+        int len = doc.getLength();
         try {
-            File myObj = new File("./src/main/resources/keywords.txt");
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                String data = myReader.nextLine();
-                String[] splited = data.split("\\s+");
-                keywords.addAll(Arrays.asList(splited));
-            }
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
+            doc.insertString(len, content, attributeSet);
+        } catch (BadLocationException e) {
             e.printStackTrace();
         }
     }

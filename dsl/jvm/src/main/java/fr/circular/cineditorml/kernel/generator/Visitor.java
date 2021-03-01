@@ -23,6 +23,7 @@ public abstract class Visitor<T> {
 	public abstract void visit(ColorClip colorClip);
 	public abstract void visit(MergeClip mergeClip);
 	public abstract void visit(ConcatenateClip concatenateClip);
+	public abstract void visit(SubtitleClip subtitleClip);
 
 
 	/***********************

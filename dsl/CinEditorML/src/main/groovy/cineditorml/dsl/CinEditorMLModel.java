@@ -48,7 +48,7 @@ public class CinEditorMLModel {
 		this.clipsToAccept.add(textClip);
 	}
 
-	public void createTemporalTextClipWithTransparentBackground(TextClip text, int from, int to, POSITION position, String name) {
+	public void createTemporalTextClipWithTransparentBackground(Clip text, int from, int to, POSITION position, String name) {
 		String temporalTextClip = "temporised".concat(name);
 		this.createTextClip(temporalTextClip, " ");
 
@@ -94,6 +94,23 @@ public class CinEditorMLModel {
 
 	public void addClip(Clip clip){
 		this.clips.add(clip);
+	}
+
+	public void initSubtitleClip(String name, Clip clip) {
+		SubtitleClip subtitleClip = new SubtitleClip();
+		subtitleClip.setName(name);
+		subtitleClip.setClip(clip);
+		this.binding.setVariable(name, subtitleClip);
+		this.clipsToAccept.add(subtitleClip);
+	}
+
+	public void addSubtitle(int from, int to, POSITION position, String text, SubtitleClip subtitleClip) {
+		Subtitle subtitle = new Subtitle();
+		subtitle.setFrom(from);
+		subtitle.setTo(to);
+		subtitle.setPosition(position);
+		subtitle.setTxt(text);
+		subtitleClip.addSubtitle(subtitle);
 	}
 
 	public void changeName(String name){

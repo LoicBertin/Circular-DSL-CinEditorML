@@ -1,15 +1,16 @@
-createClip "introClip" during 10 with_background BLACK with_text "Intro Title" at CENTER from 4 to 7
+createClip "introClip" during 10 with_background BLACK with_text "Intro Title" at CENTER from 0 to 10
 
 importVideoClip "resources/video/alderamin 1.webm" named "clip1"
-subClipOf "clip1" from 1 to 15 named "clip1a"
-createClip "clip1a_with_subtitle" with_background "clip1a" with_text "subclip 1a subtitle" at BOTTOM from 7 to 12
-text "subclip 30 secs after s1" named "s2" during 10 at LEFT
+subClipOf "clip1" from 23 to 107 named "clip1a"
+createClip "clip1a_with_subtitle" with_background "clip1a" with_text "subclip 1a subtitle" at BOTTOM from 0 to 10 and_with_text "subclip 1a subtitle 2" at BOTTOM from 40 to 50
+//addText "subclip 1a subtitle 2" at BOTTOM from 40 to 50 on "clip1a_with_subtitle"
 
-subClipOf "clip1" from 30 to 45 named "clip1b"
-text "subclip 1b subtitle" named "s3" during 15 at BOTTOM
-addText "s3" on "clip1b"
+subClipOf "clip1" from 121 to 141 named "clip1b"
+//createClip "clip1b_with_subtitle" with_background "clip1b" with_text "subclip 1b subtitle" at BOTTOM from -5 to 10
 
-createClip "outroClip" during 10 with_background BLACK with_text "THANKS FOR WATCHING" at CENTER with_same_duration_as_background "yes"
+addText "je suis content" on "clip1a_with_subtitle" at 5 before_the_end_and_on "clip1b" during 10
+
+createClip "outroClip" during 10 with_background BLACK with_text "THANKS FOR WATCHING" at CENTER from 0 to 10
 
 makeVideoClip "scenario2" with "introClip" then "clip1a_with_subtitle" then "clip1b" then "outroClip"
 
