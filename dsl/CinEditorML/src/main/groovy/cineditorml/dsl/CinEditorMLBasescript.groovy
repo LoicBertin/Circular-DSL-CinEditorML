@@ -2,6 +2,7 @@ package main.groovy.cineditorml.dsl
 
 import fr.circular.cineditorml.kernel.behavioral.COLOR
 import fr.circular.cineditorml.kernel.behavioral.DurationInstruction
+import fr.circular.cineditorml.kernel.behavioral.AnimationInstruction
 import fr.circular.cineditorml.kernel.behavioral.PositionInstruction
 import fr.circular.cineditorml.kernel.structural.Clip
 import fr.circular.cineditorml.kernel.structural.TextClip
@@ -32,6 +33,9 @@ abstract class CinEditorMLBasescript extends Script {
 				text.addInstruction(new DurationInstruction(time));
 				[at: { position ->
 					text.addInstruction(new PositionInstruction(position))
+					[animated_with: { animation ->
+						text.addInstruction(new AnimationInstruction(animation))
+					}]
 				}]
 			}]
 		}]

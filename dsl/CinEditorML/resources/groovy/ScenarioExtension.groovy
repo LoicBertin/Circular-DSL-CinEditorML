@@ -1,17 +1,5 @@
-sensor "button" pin 9
-buzzer "buzzer" pin 13
+text "I am animated fuck off" named "s2" during 10 at CENTER animated_with VORTEX
 
-state "begin" means buzzer plays C4 "for" "short" duration "3" "time(s)"
-state "on" means buzzer plays STOP
-state "finished" means buzzer plays C4 "for" "long" duration "1" "time(s)"
-state "off" means buzzer plays STOP
+makeVideoClip "scenario2" with "s2"
 
-initial off
-
-from off to begin when button becomes high
-from begin to on when button becomes low
-from on to finished when button becomes high
-from finished to off when button becomes low
-
-
-export "Rendu1ScenarioExtension"
+export "scenario2" at "resources/result_videos"

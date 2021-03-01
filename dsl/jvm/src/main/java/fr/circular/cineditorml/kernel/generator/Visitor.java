@@ -14,6 +14,7 @@ public abstract class Visitor<T> {
 	public abstract void visit(Instruction instruction);
 	public abstract void visit(DurationInstruction durationInstruction);
 	public abstract void visit(PositionInstruction positionInstruction);
+	public abstract void visit(AnimationInstruction animationInstruction, TextClip textClip);
 	public abstract void visit(OpacityInstruction opacityInstruction);
 	public abstract void visit(Clip clip);
 	public abstract void visit(TextClip textClip);

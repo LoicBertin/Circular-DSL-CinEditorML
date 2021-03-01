@@ -2,6 +2,7 @@ package main.groovy.cineditorml.dsl
 
 import fr.circular.cineditorml.kernel.behavioral.COLOR
 import fr.circular.cineditorml.kernel.behavioral.POSITION
+import fr.circular.cineditorml.kernel.behavioral.ANIMATION
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.SecureASTCustomizer
 
@@ -29,6 +30,11 @@ class CinEditorMLDSL {
 		binding.setVariable("BLUE",  COLOR.BLUE)
 		binding.setVariable("BLACK", COLOR.BLACK)
 		binding.setVariable("WHITE", COLOR.WHITE)
+
+		binding.setVariable("VORTEX", ANIMATION.VORTEX)
+		binding.setVariable("VORTEXOUT", ANIMATION.VORTEXOUT)
+		binding.setVariable("CASCADE", ANIMATION.CASCADE)
+		binding.setVariable("ARRIVE", ANIMATION.ARRIVE)
 
 	}
 	
