@@ -158,7 +158,6 @@ public class ToWiring extends Visitor<StringBuffer> {
 		Subtitle finalSubtitle = null;
 		if (subtitleClip.getSubtitles().size() > 1) {
 			for (int i = 0; i < subtitleClip.getSubtitles().size(); i++) {
-				System.out.println(subtitleClip.getSubtitles().get(i).getTo());
 				if(subtitleClip.getSubtitles().get(i).getTo() == 9999){
 					finalSubtitle = subtitleClip.getSubtitles().remove(i);
 				}else{
