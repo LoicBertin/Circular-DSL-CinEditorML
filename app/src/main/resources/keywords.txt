@@ -17,3 +17,6 @@ then
 export
 on
 with
+backward
+and_on
+and_with_text
