@@ -142,9 +142,9 @@ abstract class CinEditorMLBasescript extends Script {
 					((CinEditorMLBinding)this.getBinding()).getCinEditorMLModel().initSubtitleClip(clipName,clip)
 					clipCasted = (clipName instanceof String ? (SubtitleClip)((CinEditorMLBinding)this.getBinding()).getVariable(clipName) : (SubtitleClip)clipName)
 				}
-				[at: { time ->
+				[backward: { time ->
 					((CinEditorMLBinding)this.getBinding()).getCinEditorMLModel().addSubtitle(time,9999,POSITION.BOTTOM,textName,clipCasted)
-					[before_the_end_and_on: closure]
+					[and_on: closure]
 				},
 				 during: { time ->
 					 ((CinEditorMLBinding)this.getBinding()).getCinEditorMLModel().addSubtitle(0,time,POSITION.BOTTOM,textName,clipCasted)

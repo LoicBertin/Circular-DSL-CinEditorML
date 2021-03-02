@@ -2,6 +2,7 @@
 import numpy as np
 from moviepy.editor import *
 from moviepy.video import *
+from moviepy.video.tools.credits import credits1
 from moviepy.video.tools.segmenting import findObjects
 
 #cf: https://stackoverflow.com/questions/36667702/adding-subtitles-to-a-movie-using-moviepy
@@ -11,6 +12,17 @@ def annotate(clip, txt, position, txt_color='red', fontsize=50, font='Xolonium-B
         return cvc.set_duration(clip.duration)
 
 screensize = (1920,1080)
+def createCredits(collaborators, speed=200):
+    text_file = open("Output.txt", "w")
+    text_file.write(".blank 4\n..Collaborators :\n" + collaborators.replace(",","\n"))
+    text_file.close()
+
+    credits = credits1('Output.txt',3*1920/4)
+    scrolling_credits = credits.set_pos(lambda t:('center',-1*speed*t))
+
+
+    final = CompositeVideoClip([scrolling_credits], size=screensize)
+    return final
 rotMatrix = lambda a: np.array( [[np.cos(a),np.sin(a)],
                                  [-np.sin(a),np.cos(a)]] )
 def vortex(screenpos,i,nletters):
@@ -46,6 +58,10 @@ def flatten(l,result = []):
                 result.append(l)
         return result
 
+def moveLetters(letters, funcpos):
+    return [ letter.set_pos(funcpos(letter.screenpos,i,len(letters)))
+              for i,letter in enumerate(letters)]
+
 backgroundintroClip= ColorClip(size=(1920,1080), color=(0, 0, 0)).set_duration(10)
 subs0 =[((0, 10), 'Intro Title', 'center', 'white'),
 ((10, backgroundintroClip.duration), ' ', 'bottom', 'white')]
@@ -56,10 +72,10 @@ subs1 =[((0, 10), 'subclip 1a subtitle', 'bottom', 'white'),
 ((10, 40), ' ', 'bottom', 'white'),
 ((40, 50), 'subclip 1a subtitle 2', 'bottom', 'white'),
 ((50, clip1a.duration - 5), ' ', 'bottom', 'white'),
-((clip1a.duration - 5, clip1a.duration), 'je suis content', 'bottom', 'white')]
+((clip1a.duration - 5, clip1a.duration), 'je suis un subtitle', 'bottom', 'white')]
 clip1a_with_subtitle = [annotate(clip1a.subclip(from_t, to_t), txt, position, color) for (from_t, to_t), txt, position, color in subs1]
 clip1b = clip1.subclip(121,141)
-subs2 =[((0, 10), 'je suis content', 'bottom', 'white'),
+subs2 =[((0, 10), 'je suis un subtitle', 'bottom', 'white'),
 ((10, clip1b.duration), ' ', 'bottom', 'white')]
 clip1b = [annotate(clip1b.subclip(from_t, to_t), txt, position, color) for (from_t, to_t), txt, position, color in subs2]
 backgroundoutroClip= ColorClip(size=(1920,1080), color=(0, 0, 0)).set_duration(10)

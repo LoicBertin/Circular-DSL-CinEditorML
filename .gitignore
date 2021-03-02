@@ -3,5 +3,6 @@
 *.iws
 *.ipr
 out/
+.DS_STORE
 target/
 .idea_modules/

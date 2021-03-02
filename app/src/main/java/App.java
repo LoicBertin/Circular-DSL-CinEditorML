@@ -23,6 +23,10 @@ public class App extends JFrame implements DocumentListener {
     private JPanel myPanel;
     private JLabel labelCode;
     private JLabel labelPython;
+    private JButton saveDSLArea;
+    private JTextArea pythonOutputArea;
+
+    private boolean isContentValidated;
 
     private List<String> keyWords;
 
@@ -32,6 +36,15 @@ public class App extends JFrame implements DocumentListener {
     private Mode mode = Mode.INSERT;
 
     public App(){
+        saveDSLArea.setForeground(Color.WHITE);
+        importButton.setForeground(Color.WHITE);
+        RUNButton.setForeground(Color.WHITE);
+        saveButton.setForeground(Color.WHITE);
+        visualizeButton.setForeground(Color.WHITE);
+
+        DefaultCaret caret = (DefaultCaret)pythonOutputArea.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+
         System.out.println("Working Directory = " + System.getProperty("user.dir"));
         this.setContentPane(myPanel);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,88 +54,15 @@ public class App extends JFrame implements DocumentListener {
 
         RUNButton.addActionListener(e -> {
             Highlight highlight = new Highlight(keyWords);
-            boolean isContentValidated = highlight.highlight(dslArea);
-            if (isContentValidated) {
-                int confirmed = JOptionPane.showConfirmDialog(null, "Cliquez sur YES pour créer la vidéo ! Veuillez attendre le dialogue de confirmation.",
-                        "En cours", JOptionPane.YES_NO_CANCEL_OPTION);
-                if (confirmed != 0) {
-                    return;
-                }
-
-                // Write content in the UI in a file
-                File fold = new File("./src/main/resources/dslwritten.txt");
-                fold.delete();
-                File fnew = new File("./src/main/resources/dslwritten.txt");
-
-                String source = dslArea.getText();
-                try {
-                    FileWriter f2 = new FileWriter(fnew, false);
-                    f2.write(source);
-                    f2.close();
-                } catch (IOException exception) {
-                    exception.printStackTrace();
-                }
-                pythonArea.setText("");
-                // Execute script
-                String command = "java -jar ./src/main/resources/lib/dsl-groovy-1.0-jar-with-dependencies.jar ./src/main/resources/dslwritten.txt";
-
-                try {
-                    Process process = Runtime.getRuntime().exec(command);
-
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        pythonArea.append(line);
-                        pythonArea.append(System.lineSeparator());
-                    }
-                    reader.close();
-                } catch (IOException exception) {
-                    exception.printStackTrace();
-                }
-
-                long time = System.currentTimeMillis();
-                fold = new File("./video-" + time + ".py");
-                fold.delete();
-                fnew = new File("./video-" + time + ".py");
-
-                String python = pythonArea.getText();
-                try {
-                    FileWriter f2 = new FileWriter(fnew, false);
-                    f2.write(python);
-                    f2.close();
-                } catch (IOException exception) {
-                    exception.printStackTrace();
-                }
-
-                System.out.println("python ./video-" + time + ".py");
-                String commandPython = "python ./video-" + time + ".py";
-
-                try {
-                    Process process = Runtime.getRuntime().exec(commandPython);
-
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        System.out.println(line);
-                        System.out.println(System.lineSeparator());
-                    }
-                    reader.close();
-                } catch (IOException exception) {
-                    exception.printStackTrace();
-                }
-
-                JOptionPane.showMessageDialog(this, "La vidéo a été créée avec succès !",
-                        "Création terminée", JOptionPane.INFORMATION_MESSAGE);
-
-            } else {
-                JOptionPane.showMessageDialog(this, "Le contenu n'est pas correct !",
-                        "Erreur", JOptionPane.ERROR_MESSAGE);
-            }
+            isContentValidated = highlight.highlight(dslArea);
+            PythonWorker worker = new PythonWorker();
+            worker.execute();
         });
 
         visualizeButton.addActionListener(e -> {
+            pythonOutputArea.setText("");
             Highlight highlight = new Highlight(keyWords);
-            boolean isContentValidated = highlight.highlight(dslArea);
+            isContentValidated = highlight.highlight(dslArea);
             if (isContentValidated) {
                 // Write content in the UI in a file
                 File fold = new File("./src/main/resources/dslwritten.txt");
@@ -181,6 +121,44 @@ public class App extends JFrame implements DocumentListener {
                     System.out.println("An error occurred.");
                     e1.printStackTrace();
                 }
+            }
+        });
+
+        saveButton.addActionListener(e -> {
+            final JFileChooser SaveAs = new JFileChooser();
+            SaveAs.setApproveButtonText("Save");
+            int actionDialog = SaveAs.showOpenDialog(this);
+
+            File fileName = new File(SaveAs.getSelectedFile() + ".py");
+            try {
+                if (fileName == null) {
+                    return;
+                }
+                BufferedWriter outFile = new BufferedWriter(new FileWriter(fileName));
+                outFile.write(pythonArea.getText()); //put in textfile
+
+                outFile.close();
+            } catch (IOException ex) {
+
+            }
+        });
+
+        saveDSLArea.addActionListener(e -> {
+            final JFileChooser SaveAs = new JFileChooser();
+            SaveAs.setApproveButtonText("Save");
+            int actionDialog = SaveAs.showOpenDialog(this);
+
+            File fileName = new File(SaveAs.getSelectedFile() + ".groovy");
+            try {
+                if (fileName == null) {
+                    return;
+                }
+                BufferedWriter outFile = new BufferedWriter(new FileWriter(fileName));
+                outFile.write(dslArea.getText()); //put in textfile
+
+                outFile.close();
+            } catch (IOException ex) {
+
             }
         });
 
@@ -314,6 +292,92 @@ public class App extends JFrame implements DocumentListener {
                 dslArea.replaceSelection("\n");
             }
         }
+    }
+
+    private class PythonWorker extends SwingWorker<Void, String> {
+        @Override
+        protected Void doInBackground() throws Exception {
+            if (isContentValidated) {
+                int confirmed = JOptionPane.showConfirmDialog(null, "Cliquez sur OUI pour créer la vidéo ! Veuillez attendre le dialogue de confirmation.",
+                        "En cours", JOptionPane.YES_NO_CANCEL_OPTION);
+                if (confirmed != 0) {
+                    return null;
+                }
+
+                // Write content in the UI in a file
+                File fold = new File("./src/main/resources/dslwritten.txt");
+                fold.delete();
+                File fnew = new File("./src/main/resources/dslwritten.txt");
+
+                String source = dslArea.getText();
+                try {
+                    FileWriter f2 = new FileWriter(fnew, false);
+                    f2.write(source);
+                    f2.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+                pythonArea.setText("");
+                // Execute script
+                String command = "java -jar ./src/main/resources/lib/dsl-groovy-1.0-jar-with-dependencies.jar ./src/main/resources/dslwritten.txt";
+
+                try {
+                    Process process = Runtime.getRuntime().exec(command);
+
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        pythonArea.append(line);
+                        pythonArea.append(System.lineSeparator());
+                    }
+                    reader.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+
+                long time = System.currentTimeMillis();
+                fold = new File("./video-" + time + ".py");
+                fold.delete();
+                fnew = new File("./video-" + time + ".py");
+
+                String python = pythonArea.getText();
+                try {
+                    FileWriter f2 = new FileWriter(fnew, false);
+                    f2.write(python);
+                    f2.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+
+                System.out.println("python ./video-" + time + ".py");
+                String commandPython = "python ./video-" + time + ".py";
+
+                try {
+                    Process process = Runtime.getRuntime().exec(commandPython);
+
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        pythonOutputArea.append(line);
+                        pythonOutputArea.append(System.lineSeparator());
+                        System.out.println(line);
+                        System.out.println(System.lineSeparator());
+                    }
+                    reader.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+
+                JOptionPane.showMessageDialog(myPanel, "La vidéo a été créée avec succès !",
+                        "Création terminée", JOptionPane.INFORMATION_MESSAGE);
+
+            } else {
+                JOptionPane.showMessageDialog(myPanel, "Le contenu n'est pas correct !",
+                        "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+            return null;
+        }
+
     }
 }
 

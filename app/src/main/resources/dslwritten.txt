@@ -1,14 +1,16 @@
-text "Intro Title" named "textIntro" during 10 at CENTER
-backgroundClip BLACK named "introClip" during 10
-addText "textIntro" on "introClip"
-
-importVideoClip "resources/video/dj_rexma.mp4" named "clip1"
-importVideoClip "resources/video/in_and_in_and_in.mp4" named "clip2"
-
-text "THANKS FOR WATCHING" named "textOutro" during 15 at CENTER
-backgroundClip BLACK named "outroClip" during 15
-addText "textOutro" on "outroClip"
-
-makeVideoClip "scenario1" with "introClip" then "clip1" then "clip2" then "outroClip"
-
-export "scenario1" at "resources/result_videos"
+createClip "introClip" during 10 with_background BLACK with_text "Intro Title" at CENTER from 0 to 10
+
+importVideoClip "../dsl/CinEditorML/resources/video/alderamin 1.webm" named "clip1"
+subClipOf "clip1" from 23 to 107 named "clip1a"
+createClip "clip1a_with_subtitle" with_background "clip1a" with_text "subclip 1a subtitle" at BOTTOM from 0 to 10 and_with_text "subclip 1a subtitle 2" at BOTTOM from 40 to 50
+
+subClipOf "clip1" from 121 to 141 named "clip1b"
+
+addText "je suis un subtitle" on "clip1a_with_subtitle" backward 5 and_on "clip1b" during 10
+
+createClip "outroClip" during 10 with_background BLACK with_text "THANKS FOR WATCHING" at CENTER from 0 to 10
+
+makeVideoClip "scenario2" with "introClip" then "clip1a_with_subtitle" then "clip1b" then "outroClip"
+
+
+export "scenario2" at "."

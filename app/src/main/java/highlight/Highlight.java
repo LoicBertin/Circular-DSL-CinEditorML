@@ -42,6 +42,7 @@ public class Highlight {
 
             String[] words = list.toArray(new String[0]);
             int countWrong = 0;
+            boolean isEmptyLine = false;
 
             for (int i = 0; i < words.length; i++) {
                 String word = words[i];
@@ -60,10 +61,15 @@ public class Highlight {
                 } else {
                     if (keywords.contains(previousWord)) {
                         aset = defaultAttr;
+                        System.out.println("Word: " + word);
                     } else {
-                        countWrong++;
                         aset = missingAttr;
-                        isValid = false;
+                        if (word.trim().isEmpty()) {
+                            isEmptyLine = true;
+                        } else {
+                            countWrong++;
+                            isValid = false;
+                        }
                     }
                 }
                 if (!nextWord.equals("")) {
@@ -73,7 +79,8 @@ public class Highlight {
                 }
             }
 
-            if ((words.length - countWrong) % 2 != 0) {
+            if ((words.length - countWrong) % 2 != 0 && !isEmptyLine) {
+                System.out.println("#2");
                 write(tp, " missingValue", missingAttr);
                 isValid = false;
             }

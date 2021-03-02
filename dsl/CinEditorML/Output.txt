@@ -4,3 +4,5 @@ Bernard
 Didier
 Francois
 Stephane
+Loic
+Guillaume

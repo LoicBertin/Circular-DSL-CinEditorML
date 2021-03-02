@@ -63,17 +63,15 @@ def moveLetters(letters, funcpos):
               for i,letter in enumerate(letters)]
 
 textIntro = TextClip(txt="MY SUPER TOOL",fontsize=70,color='white',font="Amiri-Bold").set_duration(10).set_position("center")
-m729ff098 = CompositeVideoClip( [textIntro.set_pos('center')],
+mb777505a = CompositeVideoClip( [textIntro.set_pos('center')],
                         size=screensize)
 
-letters = findObjects(m729ff098)
+letters = findObjects(mb777505a)
 
 textIntro =  CompositeVideoClip( moveLetters(letters, cascade), size = screensize).subclip(0,5)
 
 
 clip1 = VideoFileClip("resources/video/dj_rexma.mp4")
 credit = createCredits("Bernard,Didier,Francois,Stephane,Loic,Guillaume", 300).subclip(0,4)
-credit2 = createCredits("Bernard,Didier,Francois,Stephane,Loic,Guillaume,troll,guilhem,test", 200).subclip(0,10)
-credit3 = createCredits("Bernard,Didier,Francois,Stephane", 100).subclip(0,9)
-result = concatenate_videoclips(flatten([textIntro,clip1,credit,credit2,credit3]))
+result = concatenate_videoclips(flatten([textIntro,clip1,credit]))
 result.write_videofile("resources/result_videos/scenarioExtension.webm",fps=25, threads=4)
