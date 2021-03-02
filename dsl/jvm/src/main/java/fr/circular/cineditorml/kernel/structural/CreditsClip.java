@@ -1,22 +1,15 @@
 package fr.circular.cineditorml.kernel.structural;
 
+import fr.circular.cineditorml.kernel.behavioral.SPEED;
 import fr.circular.cineditorml.kernel.generator.Visitor;
 
-public class TextClip extends Clip{
+public class CreditsClip extends Clip{
 
     private String text;
-    private String fontsize;
-    private String color;
+    private SPEED speed;
 
-    public TextClip(){
-        this.fontsize = "70";
-        this.color = "white";
-    }
-
-    public TextClip(String t, String f, String c){
-        this.text = t;
-        this.fontsize = f;
-        this.color = c;
+    public CreditsClip(){
+        this.speed = SPEED.NORMAL;
     }
 
     public String getText() {
@@ -27,20 +20,17 @@ public class TextClip extends Clip{
         this.text = text;
     }
 
-    public String getFontsize() {
-        return fontsize;
+    public SPEED getSpeed() {
+        return speed;
     }
 
-    public void setFontsize(String fontsize) {
-        this.fontsize = fontsize;
+    public void setSpeed(SPEED speed) {
+        this.speed = speed;
     }
 
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
+    public CreditsClip(String text, SPEED speed) {
+        this.text = text;
+        this.speed = speed;
     }
 
     @Override

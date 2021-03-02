@@ -4,6 +4,15 @@ import fr.circular.cineditorml.kernel.generator.Visitor;
 
 public class AnimationInstruction extends Instruction {
     private ANIMATION animation;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public AnimationInstruction() {
         this.animation = ANIMATION.VORTEX;

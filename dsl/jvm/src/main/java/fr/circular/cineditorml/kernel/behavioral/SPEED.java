@@ -1,14 +1,13 @@
 package fr.circular.cineditorml.kernel.behavioral;
 
-public enum ANIMATION {
-    VORTEX("vortex"),
-    CASCADE("cascade"),
-    ARRIVE("arrive"),
-    VORTEXOUT("vortexout");
+public enum SPEED {
+    SLOW(100),
+    NORMAL(200),
+    FAST(300);
 
-    public final String animation;
+    public final int speed;
 
-    ANIMATION(String animation) {
-        this.animation = animation;
+    SPEED(int speed) {
+        this.speed = speed;
     }
 }
