@@ -48,6 +48,14 @@ public class CinEditorMLModel {
 		this.clipsToAccept.add(textClip);
 	}
 
+	public void createCreditsClip(String name, String text) {
+		CreditsClip creditsClip = new CreditsClip();
+		creditsClip.setName(name);
+		creditsClip.setText(text);
+		this.binding.setVariable(name, creditsClip);
+		this.clipsToAccept.add(creditsClip);
+	}
+
 	public void createTemporalTextClipWithTransparentBackground(Clip text, int from, int to, POSITION position, String name) {
 		String temporalTextClip = "temporised".concat(name);
 		this.createTextClip(temporalTextClip, " ");

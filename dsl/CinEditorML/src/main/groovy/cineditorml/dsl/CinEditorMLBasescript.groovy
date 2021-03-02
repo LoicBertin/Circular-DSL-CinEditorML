@@ -7,6 +7,7 @@ import fr.circular.cineditorml.kernel.behavioral.POSITION
 import fr.circular.cineditorml.kernel.behavioral.PositionInstruction
 import fr.circular.cineditorml.kernel.behavioral.Subtitle
 import fr.circular.cineditorml.kernel.structural.Clip
+import fr.circular.cineditorml.kernel.structural.CreditsClip
 import fr.circular.cineditorml.kernel.structural.SubtitleClip
 import fr.circular.cineditorml.kernel.structural.TextClip
 import fr.circular.cineditorml.kernel.structural.VideoClip
@@ -40,6 +41,16 @@ abstract class CinEditorMLBasescript extends Script {
 						text.addInstruction(new AnimationInstruction(animation))
 					}]
 				}]
+			}]
+		}]
+	}
+
+	def makeCreditsWith(String content) {
+		[named: { name ->
+			((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().createCreditsClip(name, content)
+			[at_speed: { speed ->
+				CreditsClip credits = (name instanceof String ? (CreditsClip) ((CinEditorMLBinding) this.getBinding()).getVariable(name) : (CreditsClip) name)
+				credits.setSpeed(speed);
 			}]
 		}]
 	}
