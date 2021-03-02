@@ -27,7 +27,7 @@ subs1 =[((0, 10), 'subclip 1a subtitle', 'bottom', 'white'),
 ((10, 40), ' ', 'bottom', 'white'),
 ((40, 50), 'subclip 1a subtitle 2', 'bottom', 'white'),
 ((50, clip1a.duration - 5), ' ', 'bottom', 'white'),
-((clip1a.duration - 5, clip1a.duration), 'je suis content', 'bottom', 'white')]
+((clip1a.duration - 5, clip1a.duration), 'je suis un subtitle', 'bottom', 'white')]
 clip1a_with_subtitle = [annotate(clip1a.subclip(from_t, to_t), txt, position, color) for (from_t, to_t), txt, position, color in subs1]
 clip1b = clip1.subclip(121,141)
 subs2 =[((0, 10), 'je suis un subtitle', 'bottom', 'white'),
