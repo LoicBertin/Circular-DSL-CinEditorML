@@ -32,11 +32,93 @@ public class App extends JFrame implements DocumentListener {
     private Mode mode = Mode.INSERT;
 
     public App(){
+        System.out.println("Working Directory = " + System.getProperty("user.dir"));
         this.setContentPane(myPanel);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
         this.setSize(1280,720);
         this.setVisible(true);
+
+        RUNButton.addActionListener(e -> {
+            Highlight highlight = new Highlight(keyWords);
+            boolean isContentValidated = highlight.highlight(dslArea);
+            if (isContentValidated) {
+                int confirmed = JOptionPane.showConfirmDialog(null, "Cliquez sur YES pour créer la vidéo ! Veuillez attendre le dialogue de confirmation.",
+                        "En cours", JOptionPane.YES_NO_CANCEL_OPTION);
+                if (confirmed != 0) {
+                    return;
+                }
+
+                // Write content in the UI in a file
+                File fold = new File("./src/main/resources/dslwritten.txt");
+                fold.delete();
+                File fnew = new File("./src/main/resources/dslwritten.txt");
+
+                String source = dslArea.getText();
+                try {
+                    FileWriter f2 = new FileWriter(fnew, false);
+                    f2.write(source);
+                    f2.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+                pythonArea.setText("");
+                // Execute script
+                String command = "java -jar ./src/main/resources/lib/dsl-groovy-1.0-jar-with-dependencies.jar ./src/main/resources/dslwritten.txt";
+
+                try {
+                    Process process = Runtime.getRuntime().exec(command);
+
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        pythonArea.append(line);
+                        pythonArea.append(System.lineSeparator());
+                    }
+                    reader.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+
+                long time = System.currentTimeMillis();
+                fold = new File("./video-" + time + ".py");
+                fold.delete();
+                fnew = new File("./video-" + time + ".py");
+
+                String python = pythonArea.getText();
+                try {
+                    FileWriter f2 = new FileWriter(fnew, false);
+                    f2.write(python);
+                    f2.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+
+                System.out.println("python ./video-" + time + ".py");
+                String commandPython = "python ./video-" + time + ".py";
+
+                try {
+                    Process process = Runtime.getRuntime().exec(commandPython);
+
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        System.out.println(line);
+                        System.out.println(System.lineSeparator());
+                    }
+                    reader.close();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+                }
+
+                JOptionPane.showMessageDialog(this, "La vidéo a été créée avec succès !",
+                        "Création terminée", JOptionPane.INFORMATION_MESSAGE);
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Le contenu n'est pas correct !",
+                        "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+        });
 
         visualizeButton.addActionListener(e -> {
             Highlight highlight = new Highlight(keyWords);
