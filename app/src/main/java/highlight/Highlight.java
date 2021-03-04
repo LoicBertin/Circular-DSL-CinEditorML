@@ -61,7 +61,6 @@ public class Highlight {
                 } else {
                     if (keywords.contains(previousWord)) {
                         aset = defaultAttr;
-                        System.out.println("Word: " + word);
                     } else {
                         aset = missingAttr;
                         if (word.trim().isEmpty()) {
@@ -80,7 +79,6 @@ public class Highlight {
             }
 
             if ((words.length - countWrong) % 2 != 0 && !isEmptyLine) {
-                System.out.println("#2");
                 write(tp, " missingValue", missingAttr);
                 isValid = false;
             }

@@ -305,9 +305,9 @@ public class App extends JFrame implements DocumentListener {
                 }
 
                 // Write content in the UI in a file
-                File fold = new File("./src/main/resources/dslwritten.txt");
+                File fold = new File("./dslwritten.txt");
                 fold.delete();
-                File fnew = new File("./src/main/resources/dslwritten.txt");
+                File fnew = new File("./dslwritten.txt");
 
                 String source = dslArea.getText();
                 try {
@@ -319,7 +319,7 @@ public class App extends JFrame implements DocumentListener {
                 }
                 pythonArea.setText("");
                 // Execute script
-                String command = "java -jar ./src/main/resources/lib/dsl-groovy-1.0-jar-with-dependencies.jar ./src/main/resources/dslwritten.txt";
+                String command = "java -jar ./src/main/resources/lib/dsl-groovy-1.0-jar-with-dependencies.jar ./dslwritten.txt";
 
                 try {
                     Process process = Runtime.getRuntime().exec(command);
@@ -335,10 +335,9 @@ public class App extends JFrame implements DocumentListener {
                     exception.printStackTrace();
                 }
 
-                long time = System.currentTimeMillis();
-                fold = new File("./video-" + time + ".py");
+                fold = new File("./dslvideo.py");
                 fold.delete();
-                fnew = new File("./video-" + time + ".py");
+                fnew = new File("./dslvideo.py");
 
                 String python = pythonArea.getText();
                 try {
@@ -349,8 +348,8 @@ public class App extends JFrame implements DocumentListener {
                     exception.printStackTrace();
                 }
 
-                System.out.println("python ./video-" + time + ".py");
-                String commandPython = "python ./video-" + time + ".py";
+                System.out.println("python ./dslvideo.py");
+                String commandPython = "python ./dslvideo.py";
 
                 try {
                     Process process = Runtime.getRuntime().exec(commandPython);
