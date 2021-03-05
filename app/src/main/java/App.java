@@ -166,9 +166,9 @@ public class App extends JFrame implements DocumentListener {
             isContentValidated = highlight.highlight(dslArea);
             if (isContentValidated) {
                 // Write content in the UI in a file
-                File fold = new File("./src/main/resources/dslwritten.txt");
+                File fold = new File("./dslwritten.txt");
                 fold.delete();
-                File fnew = new File("./src/main/resources/dslwritten.txt");
+                File fnew = new File("./dslwritten.txt");
 
                 String source = dslArea.getText();
                 try {
@@ -180,7 +180,7 @@ public class App extends JFrame implements DocumentListener {
                 }
                 pythonArea.setText("");
                 // Execute script
-                String command = "java -jar ./src/main/resources/lib/dsl-groovy-1.0-jar-with-dependencies.jar ./src/main/resources/dslwritten.txt";
+                String command = "java -jar ./resources/dsl-groovy-1.0-jar-with-dependencies.jar ./dslwritten.txt";
 
                 try {
                     Process process = Runtime.getRuntime().exec(command);
@@ -289,7 +289,7 @@ public class App extends JFrame implements DocumentListener {
 
     public void importKeyWords() {
         try {
-            File myObj = new File("./src/main/resources/keywords.txt");
+            File myObj = new File("./resources/keywords.txt");
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
@@ -420,7 +420,7 @@ public class App extends JFrame implements DocumentListener {
                 }
                 pythonArea.setText("");
                 // Execute script
-                String command = "java -jar ./src/main/resources/lib/dsl-groovy-1.0-jar-with-dependencies.jar ./dslwritten.txt";
+                String command = "java -jar ./resources/dsl-groovy-1.0-jar-with-dependencies.jar ./dslwritten.txt";
 
                 try {
                     Process process = Runtime.getRuntime().exec(command);
