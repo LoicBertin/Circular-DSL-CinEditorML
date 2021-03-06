@@ -63,19 +63,19 @@ def moveLetters(letters, funcpos):
               for i,letter in enumerate(letters)]
 
 backgroundintroClip= ColorClip(size=(1920,1080), color=(0, 0, 0)).set_duration(10)
-subs0 =[((0, 10), 'Intro Title', 'center', 'white'),
+subs0 =[((0, 10), 'Alice cast work', 'center', 'white'),
 ((10, backgroundintroClip.duration), ' ', 'bottom', 'white')]
 introClip = [annotate(backgroundintroClip.subclip(from_t, to_t), txt, position, color) for (from_t, to_t), txt, position, color in subs0]
-clip1 = VideoFileClip("resources/video/alderamin 1.webm")
+clip1 = VideoFileClip("resources/video/Alice's cast work.webm")
 clip1a = clip1.subclip(23,107)
-subs1 =[((0, 10), 'subclip 1a subtitle', 'bottom', 'white'),
+subs1 =[((0, 10), 'it is important to have an eye contact with your public', 'bottom', 'white'),
 ((10, 40), ' ', 'bottom', 'white'),
-((40, 50), 'subclip 1a subtitle 2', 'bottom', 'white'),
+((40, 50), 'do not forget to smile and show you want to be here', 'bottom', 'white'),
 ((50, clip1a.duration - 5), ' ', 'bottom', 'white'),
-((clip1a.duration - 5, clip1a.duration), 'je suis un subtitle', 'bottom', 'white')]
+((clip1a.duration - 5, clip1a.duration), 'do not forget to tell stories to people', 'bottom', 'white')]
 clip1a_with_subtitle = [annotate(clip1a.subclip(from_t, to_t), txt, position, color) for (from_t, to_t), txt, position, color in subs1]
 clip1b = clip1.subclip(121,141)
-subs2 =[((0, 10), 'je suis un subtitle', 'bottom', 'white'),
+subs2 =[((0, 10), 'do not forget to tell stories to people', 'bottom', 'white'),
 ((10, clip1b.duration), ' ', 'bottom', 'white')]
 clip1b = [annotate(clip1b.subclip(from_t, to_t), txt, position, color) for (from_t, to_t), txt, position, color in subs2]
 backgroundoutroClip= ColorClip(size=(1920,1080), color=(0, 0, 0)).set_duration(10)

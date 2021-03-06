@@ -62,12 +62,12 @@ def moveLetters(letters, funcpos):
     return [ letter.set_pos(funcpos(letter.screenpos,i,len(letters)))
               for i,letter in enumerate(letters)]
 
-textIntro = TextClip(txt="CHEZ MAREX LE 23/02/2021",fontsize=70,color='white',font="Amiri-Bold").set_duration(10).set_position("center")
+textIntro = TextClip(txt="ALICE & BOB HOLIDAYS !!!",fontsize=70,color='white',font="Amiri-Bold").set_duration(10).set_position("center")
 
 introClip= ColorClip(size=(1920,1080), color=(0, 0, 0)).set_duration(10)
 introClip = CompositeVideoClip([introClip,textIntro])
-clip1 = VideoFileClip("resources/video/dj_rexma.mp4")
-clip2 = VideoFileClip("resources/video/in_and_in_and_in.mp4")
+clip1 = VideoFileClip("resources/video/Alice&BobHolidaysPart1.webm")
+clip2 = VideoFileClip("resources/video/Alice&BobHolidaysPart2.webm")
 textOutro = TextClip(txt="THANKS FOR WATCHING",fontsize=70,color='white',font="Amiri-Bold").set_duration(15).set_position("center")
 
 outroClip= ColorClip(size=(1920,1080), color=(0, 0, 0)).set_duration(15)
