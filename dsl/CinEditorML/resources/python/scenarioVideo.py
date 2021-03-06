@@ -66,27 +66,27 @@ backgroundintroClip= ColorClip(size=(1920,1080), color=(0, 0, 0)).set_duration(5
 subs0 =[((0, 5), 'Intro Title', 'center', 'white'),
 ((5, backgroundintroClip.duration), ' ', 'bottom', 'white')]
 introClip = [annotate(backgroundintroClip.subclip(from_t, to_t), txt, position, color) for (from_t, to_t), txt, position, color in subs0]
-textIntro = TextClip(txt="MY SUPER ANIME",fontsize=70,color='white',font="Amiri-Bold").set_duration(5).set_position("center")
-m04512a53 = CompositeVideoClip( [textIntro.set_pos('center')],
+textIntro = TextClip(txt="MA VIDÃ©O DE DSL",fontsize=70,color='white',font="Amiri-Bold").set_duration(5).set_position("center")
+m11151fbd = CompositeVideoClip( [textIntro.set_pos('center')],
                         size=screensize)
 
-letters = findObjects(m04512a53)
+letters = findObjects(m11151fbd)
 
 textIntro =  CompositeVideoClip( moveLetters(letters, cascade), size = screensize).subclip(0,5)
 
 
-clip1 = VideoFileClip("resources/video/alderamin 1.webm")
+clip1 = VideoFileClip("target/video/Alice's cast work.webm")
 clip1a = clip1.subclip(23,43)
-subs1 =[((0, 5), 'Le premier anime, Alderamin', 'bottom', 'white'),
+subs1 =[((0, 5), 'Le premier clip, le travail d'Alice', 'bottom', 'white'),
 ((5, 7), ' ', 'bottom', 'white'),
-((7, 13), 'Le second anime, Berserk', 'bottom', 'white'),
+((7, 13), 'un travail trÃ¨s intÃ©rÃ©ssant !!', 'bottom', 'white'),
 ((13, clip1a.duration - 5), ' ', 'bottom', 'white'),
 ((clip1a.duration - 5, clip1a.duration), 'on va changer de clip', 'bottom', 'white')]
 clip1a = [annotate(clip1a.subclip(from_t, to_t), txt, position, color) for (from_t, to_t), txt, position, color in subs1]
-clip2 = VideoFileClip("resources/video/dj_rexma.mp4")
+clip2 = VideoFileClip("target/video/Alice&BobHolidaysPart1.webm")
 subs2 =[((0, 5), 'on va changer de clip', 'bottom', 'white'),
 ((5, clip2.duration), ' ', 'bottom', 'white')]
 clip2 = [annotate(clip2.subclip(from_t, to_t), txt, position, color) for (from_t, to_t), txt, position, color in subs2]
-credit = createCredits("Guillaume, LoÃ¯c, StÃ©phane et Virgile", 300).subclip(0,2)
+credit = createCredits("Guillaume, Loic, Stephane, Virgile", 300).subclip(0,3)
 result = concatenate_videoclips(flatten([introClip,textIntro,clip1a,clip2,credit]))
-result.write_videofile("resources/result_videos/scenarioVideo.webm",fps=25, threads=4)
+result.write_videofile("./scenarioVideo.webm",fps=25, threads=4)
