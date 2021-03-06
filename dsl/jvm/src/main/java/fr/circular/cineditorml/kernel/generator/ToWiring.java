@@ -253,21 +253,25 @@ public class ToWiring extends Visitor<StringBuffer> {
                     tempSubtitles.add(subtitleClip.getSubtitles().get(i));
                 }
             }
-            for (int i = 0; i < tempSubtitles.size() - 1; i++) {
-                subtitles.add(tempSubtitles.get(i));
-                if (tempSubtitles.get(i).getTo() != tempSubtitles.get(i + 1).getFrom()) {
-                    Subtitle subtitle = new Subtitle();
-                    subtitle.setTxt(" ");
-                    subtitle.setPosition(POSITION.BOTTOM);
-                    subtitle.setFrom(tempSubtitles.get(i).getTo());
-                    subtitle.setTo(tempSubtitles.get(i + 1).getFrom());
-                    subtitles.add(subtitle);
+            if (tempSubtitles.size() > 1) {
+                for (int i = 0; i < tempSubtitles.size() - 1; i++) {
+                    subtitles.add(tempSubtitles.get(i));
+                    if (tempSubtitles.get(i).getTo() != tempSubtitles.get(i + 1).getFrom()) {
+                        Subtitle subtitle = new Subtitle();
+                        subtitle.setTxt(" ");
+                        subtitle.setPosition(POSITION.BOTTOM);
+                        subtitle.setFrom(tempSubtitles.get(i).getTo());
+                        subtitle.setTo(tempSubtitles.get(i + 1).getFrom());
+                        subtitles.add(subtitle);
+                    }
+                    if (i == tempSubtitles.size() - 2) {
+                        subtitles.add(tempSubtitles.get(i + 1));
+                    }
                 }
-                if (i == tempSubtitles.size() - 2) {
-                    subtitles.add(tempSubtitles.get(i + 1));
-                }
+                subtitleClip.setSubtitles(subtitles);
+            }else{
+                subtitleClip.setSubtitles(tempSubtitles);
             }
-            subtitleClip.setSubtitles(subtitles);
         }
         String subtitleGroupName = "subs".concat(Integer.toString(subNumber));
         w(String.format("%s =[", subtitleGroupName));
@@ -277,7 +281,7 @@ public class ToWiring extends Visitor<StringBuffer> {
         if(finalSubtitle == null){
             w(String.format("((%s, %s.duration), ' ', '%s', '%s')", subtitleClip.getSubtitles().get(subtitleClip.getSubtitles().size() - 1).getTo(), subtitleClip.getClip().getName(), POSITION.BOTTOM.position, "white"));
         }else{
-            if(subtitleClip.getSubtitles().size() > 1 && subtitleClip.getSubtitles().get(subtitleClip.getSubtitles().size() - 1) != null){
+            if(subtitleClip.getSubtitles().size() >= 1 && subtitleClip.getSubtitles().get(subtitleClip.getSubtitles().size() - 1) != null){
                 w(String.format("((%s, %s.duration - %s), ' ', '%s', '%s'),\n", subtitleClip.getSubtitles().get(subtitleClip.getSubtitles().size() - 1).getTo(), subtitleClip.getClip().getName(), finalSubtitle.getFrom() ,POSITION.BOTTOM.position, "white"));
             }else{
                 w(String.format("((%s, %s.duration - %s), ' ', '%s', '%s'),\n", 0, subtitleClip.getClip().getName(), finalSubtitle.getFrom() ,POSITION.BOTTOM.position, "white"));

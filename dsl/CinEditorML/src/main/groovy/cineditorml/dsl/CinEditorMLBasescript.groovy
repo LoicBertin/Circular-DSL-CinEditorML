@@ -138,7 +138,9 @@ abstract class CinEditorMLBasescript extends Script {
 				SubtitleClip clipCasted
 				if(clip instanceof SubtitleClip){
 					clipCasted = (SubtitleClip)clip
+					println("groovy2 : " + clip.getName())
 				}else{
+					println("groovy : " + clip.getName())
 					((CinEditorMLBinding)this.getBinding()).getCinEditorMLModel().initSubtitleClip(clipName,clip)
 					clipCasted = (clipName instanceof String ? (SubtitleClip)((CinEditorMLBinding)this.getBinding()).getVariable(clipName) : (SubtitleClip)clipName)
 				}
@@ -149,6 +151,12 @@ abstract class CinEditorMLBasescript extends Script {
 				 during: { time ->
 					 ((CinEditorMLBinding)this.getBinding()).getCinEditorMLModel().addSubtitle(0,time,POSITION.BOTTOM,textName,clipCasted)
 					 [and_on: closure]
+				 },
+				 from: { from ->
+					 [to: { to ->
+						 ((CinEditorMLBinding) this.getBinding()).getCinEditorMLModel().addSubtitle(from, to, POSITION.BOTTOM, textName, clipCasted)
+						 [and_on: closure]
+					 }]
 				 }]
 			}
 		}

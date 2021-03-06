@@ -62,7 +62,7 @@ def moveLetters(letters, funcpos):
     return [ letter.set_pos(funcpos(letter.screenpos,i,len(letters)))
               for i,letter in enumerate(letters)]
 
-textIntro = TextClip(txt="INTRO TITLE",fontsize=70,color='white',font="Amiri-Bold").set_duration(10).set_position("center")
+textIntro = TextClip(txt="CHEZ MAREX LE 23/02/2021",fontsize=70,color='white',font="Amiri-Bold").set_duration(10).set_position("center")
 
 introClip= ColorClip(size=(1920,1080), color=(0, 0, 0)).set_duration(10)
 introClip = CompositeVideoClip([introClip,textIntro])

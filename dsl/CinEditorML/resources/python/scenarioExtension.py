@@ -63,10 +63,10 @@ def moveLetters(letters, funcpos):
               for i,letter in enumerate(letters)]
 
 textIntro = TextClip(txt="MY SUPER TOOL",fontsize=70,color='white',font="Amiri-Bold").set_duration(10).set_position("center")
-mb777505a = CompositeVideoClip( [textIntro.set_pos('center')],
+m6bfd3e08 = CompositeVideoClip( [textIntro.set_pos('center')],
                         size=screensize)
 
-letters = findObjects(mb777505a)
+letters = findObjects(m6bfd3e08)
 
 textIntro =  CompositeVideoClip( moveLetters(letters, cascade), size = screensize).subclip(0,5)
 
