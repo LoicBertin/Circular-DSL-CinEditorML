@@ -228,14 +228,11 @@ public class ToWiring extends Visitor<StringBuffer> {
 
     @Override
     public void visit(SubtitleClip subtitleClip) {
-        System.out.println(subtitleClip.getName());
-        System.out.println(subtitleClip.getSubtitles().size());
         ArrayList<Subtitle> subtitles = new ArrayList<Subtitle>();
         ArrayList<Subtitle> tempSubtitles = new ArrayList<Subtitle>();
         Subtitle finalSubtitle = null;
         if(subtitleClip.getSubtitles().size() == 1){
             for (int i = 0; i < subtitleClip.getSubtitles().size(); i++) {
-                System.out.println(subtitleClip.getName() + " : " + subtitleClip.getSubtitles().get(i).getTo());
                 if(subtitleClip.getSubtitles().get(i).getTo() == 9999){
                     finalSubtitle = subtitleClip.getSubtitles().get(i);
                 }else{
@@ -246,7 +243,6 @@ public class ToWiring extends Visitor<StringBuffer> {
         }
         if (subtitleClip.getSubtitles().size() > 1) {
             for (int i = 0; i < subtitleClip.getSubtitles().size(); i++) {
-                System.out.println(subtitleClip.getName() + " : " + subtitleClip.getSubtitles().get(i).getTo());
                 if(subtitleClip.getSubtitles().get(i).getTo() == 9999){
                     finalSubtitle = subtitleClip.getSubtitles().get(i);
                 }else{
