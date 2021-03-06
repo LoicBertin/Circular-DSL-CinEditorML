@@ -35,7 +35,7 @@ Pour compiler le dsl, rendez vous dans le dossier `dsl/CinEditorML` et exécutez
 
 ## Rajouter un nouveau mot clef :
 
-Il suffit de le mot clef à rajouter dans le fichier : `bin\resources\keywords.txt`
+Il suffit de rajouter le mot clef dans le fichier : `bin\resources\keywords.txt`
 
 
 
