@@ -20,3 +20,6 @@ with
 backward
 and_on
 and_with_text
+animated_with
+makeCreditsWith
+at_speed

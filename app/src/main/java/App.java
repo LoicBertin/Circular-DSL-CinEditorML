@@ -330,21 +330,22 @@ public class App extends JFrame implements DocumentListener {
         }
 
         String prefix = content.substring(w + 1).toLowerCase();
-        boolean founded = false;
-        for (String temp : keyWords) {
-            if (temp.toLowerCase().startsWith(prefix.toLowerCase()) && !founded) {
-                System.out.println(temp);
-                founded = true;
-                // A completion is found
-                String completion = temp.substring(pos - w);
-                // We cannot modify Document from within notification,
-                // so we submit a task that does the change later
-                SwingUtilities.invokeLater(
-                        new CompletionTask(completion, pos + 1));
+        if( (w > 0 && content.charAt(w) != '\"') | (w == -1)){
+            boolean founded = false;
+            for (String temp : keyWords) {
+                if (temp.toLowerCase().startsWith(prefix.toLowerCase()) && !founded) {
+                    founded = true;
+                    // A completion is found
+                    String completion = temp.substring(pos - w);
+                    // We cannot modify Document from within notification,
+                    // so we submit a task that does the change later
+                    SwingUtilities.invokeLater(
+                            new CompletionTask(completion, pos + 1));
+                }
             }
-        }
-        if (!founded) {
-            mode = Mode.INSERT;
+            if (!founded) {
+                mode = Mode.INSERT;
+            }
         }
     }
 
